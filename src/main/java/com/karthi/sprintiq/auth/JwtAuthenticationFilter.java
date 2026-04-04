@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   ) throws ServletException, IOException {
     String jwt = extractJwtFromRequest(request);
     if (jwt == null) {
-      filterChain.doFilter(request, response);
+      sendError(response, "Token not found");
       return;
     }
 
@@ -89,6 +89,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     return header.substring(SecurityConstants.BEARER_PREFIX.length());
+  }
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    String path = request.getServletPath();
+    return path.startsWith(SecurityConstants.PUBLIC_PATH);
   }
 
   /**
