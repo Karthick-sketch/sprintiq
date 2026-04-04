@@ -4,11 +4,15 @@ import com.karthi.sprintiq.auth.dto.AuthResponseDTO;
 import com.karthi.sprintiq.auth.dto.LoginRequestDTO;
 import com.karthi.sprintiq.auth.dto.RegisterRequestDTO;
 import com.karthi.sprintiq.constants.SecurityConstants;
+import com.karthi.sprintiq.exception.EmailAlreadyExistsException;
+import com.karthi.sprintiq.exception.InvalidCredentialsException;
+import com.karthi.sprintiq.exception.InvalidTokenException;
 import com.karthi.sprintiq.user.entity.User;
 import com.karthi.sprintiq.user.enums.Role;
 import com.karthi.sprintiq.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +31,7 @@ public class AuthService {
 
   public AuthResponseDTO register(RegisterRequestDTO request) {
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new RuntimeException("Email already exists: " + request.getEmail());
+      throw new EmailAlreadyExistsException(request.getEmail());
     }
 
     User user = User.builder()
@@ -39,59 +43,51 @@ public class AuthService {
 
     userRepository.save(user);
 
-    UserDetails userDetails = userDetailsService.loadUserByUsername(
-      user.getEmail()
-    );
-    String accessToken = jwtService.generateAccessToken(userDetails);
-    String refreshToken = jwtService.generateRefreshToken(userDetails);
-
-    return AuthResponseDTO.builder()
-      .accessToken(accessToken)
-      .refreshToken(refreshToken)
-      .tokenType(SecurityConstants.BEARER)
-      .expiresIn(jwtService.getAccessTokenExpiration())
-      .build();
+    return buildAuthResponse(user.getEmail());
   }
 
   public AuthResponseDTO login(LoginRequestDTO request) {
-    authenticationManager.authenticate(
-      new UsernamePasswordAuthenticationToken(
-        request.getEmail(),
-        request.getPassword()
-      )
-    );
+    try {
+      authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+          request.getEmail(),
+          request.getPassword()
+        )
+      );
+    } catch (BadCredentialsException e) {
+      throw new InvalidCredentialsException();
+    }
 
-    UserDetails userDetails = userDetailsService.loadUserByUsername(
-      request.getEmail()
-    );
-    String accessToken = jwtService.generateAccessToken(userDetails);
-    String refreshToken = jwtService.generateRefreshToken(userDetails);
-
-    return AuthResponseDTO.builder()
-      .accessToken(accessToken)
-      .refreshToken(refreshToken)
-      .tokenType(SecurityConstants.BEARER)
-      .expiresIn(jwtService.getAccessTokenExpiration())
-      .build();
+    return buildAuthResponse(request.getEmail());
   }
 
   public AuthResponseDTO refreshToken(String refreshToken) {
     String email = jwtService.extractEmail(refreshToken);
     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-    if (
-      !jwtService.isTokenValid(refreshToken, userDetails) ||
-      !jwtService.isRefreshToken(refreshToken)
-    ) {
-      throw new RuntimeException("Invalid refresh token");
+    if (!jwtService.isTokenValid(refreshToken, userDetails)
+      || !jwtService.isRefreshToken(refreshToken)) {
+      throw new InvalidTokenException("Invalid refresh token");
     }
 
-    String newAccessToken = jwtService.generateAccessToken(userDetails);
-    String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+    return buildAuthResponse(email);
+  }
+
+  // ──────────────────────────────────────────────
+  //  Private helpers
+  // ──────────────────────────────────────────────
+
+  /**
+   * Generates access + refresh tokens and wraps them in a response DTO.
+   */
+  private AuthResponseDTO buildAuthResponse(String email) {
+    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+    String accessToken = jwtService.generateAccessToken(userDetails);
+    String refreshToken = jwtService.generateRefreshToken(userDetails);
 
     return AuthResponseDTO.builder()
-      .accessToken(newAccessToken)
-      .refreshToken(newRefreshToken)
+      .accessToken(accessToken)
+      .refreshToken(refreshToken)
       .tokenType(SecurityConstants.BEARER)
       .expiresIn(jwtService.getAccessTokenExpiration())
       .build();

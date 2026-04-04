@@ -2,6 +2,8 @@ package com.karthi.sprintiq.user;
 
 import com.karthi.sprintiq.user.dto.UserRequestDTO;
 import com.karthi.sprintiq.user.dto.UserResponseDTO;
+import com.karthi.sprintiq.exception.EmailAlreadyExistsException;
+import com.karthi.sprintiq.exception.UserNotFoundException;
 import com.karthi.sprintiq.user.entity.User;
 import com.karthi.sprintiq.user.enums.Role;
 import com.karthi.sprintiq.user.repository.UserRepository;
@@ -19,7 +21,7 @@ public class UserService {
 
   public UserResponseDTO createUser(UserRequestDTO dto) {
     if (userRepository.existsByEmail(dto.getEmail())) {
-      throw new RuntimeException("Email already exists: " + dto.getEmail());
+      throw new EmailAlreadyExistsException(dto.getEmail());
     }
 
     User user = User.builder()
@@ -36,7 +38,7 @@ public class UserService {
   public UserResponseDTO getUserById(Long id) {
     User user = userRepository
       .findById(id)
-      .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+      .orElseThrow(() -> new UserNotFoundException(id));
     return toResponseDto(user);
   }
 
@@ -44,7 +46,7 @@ public class UserService {
     User user = userRepository
       .findByEmail(email)
       .orElseThrow(() ->
-        new RuntimeException("User not found with email: " + email)
+        new UserNotFoundException("User not found with email: " + email)
       );
     return toResponseDto(user);
   }
@@ -73,7 +75,7 @@ public class UserService {
 
   public void deleteUser(Long id) {
     if (!userRepository.existsById(id)) {
-      throw new RuntimeException("User not found with id: " + id);
+      throw new UserNotFoundException(id);
     }
     userRepository.deleteById(id);
   }

@@ -5,10 +5,8 @@ import com.karthi.sprintiq.auth.dto.LoginRequestDTO;
 import com.karthi.sprintiq.auth.dto.RegisterRequestDTO;
 import com.karthi.sprintiq.constants.SecurityConstants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,20 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
   private final AuthService authService;
-
-  @Value("${jwt.refresh-token-expiration}")
-  private long refreshTokenExpiration;
+  private final CookieService cookieService;
 
   @PostMapping("/register")
   public ResponseEntity<AuthResponseDTO> register(
     @RequestBody RegisterRequestDTO request
   ) {
     AuthResponseDTO authResponse = authService.register(request);
-    String cookie = setRefreshTokenCookie(authResponse.getRefreshToken());
-    authResponse.setRefreshToken(null);
-    return ResponseEntity.status(HttpStatus.CREATED)
-      .header(HttpHeaders.SET_COOKIE, cookie)
-      .body(authResponse);
+    return buildResponseWithCookie(authResponse, HttpStatus.CREATED);
   }
 
   @PostMapping("/login")
@@ -39,11 +31,7 @@ public class AuthController {
     @RequestBody LoginRequestDTO request
   ) {
     AuthResponseDTO authResponse = authService.login(request);
-    String cookie = setRefreshTokenCookie(authResponse.getRefreshToken());
-    authResponse.setRefreshToken(null);
-    return ResponseEntity.ok()
-      .header(HttpHeaders.SET_COOKIE, cookie)
-      .body(authResponse);
+    return buildResponseWithCookie(authResponse, HttpStatus.OK);
   }
 
   @PostMapping("/refresh")
@@ -58,35 +46,34 @@ public class AuthController {
     }
 
     AuthResponseDTO authResponse = authService.refreshToken(refreshToken);
-    String cookie = setRefreshTokenCookie(authResponse.getRefreshToken());
-    authResponse.setRefreshToken(null);
-    return ResponseEntity.ok()
-      .header(HttpHeaders.SET_COOKIE, cookie)
-      .body(authResponse);
+    return buildResponseWithCookie(authResponse, HttpStatus.OK);
   }
 
   @PostMapping("/logout")
   public ResponseEntity<?> logout() {
-    String cookie = clearRefreshTokenCookie();
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie).build();
+    String cookie = cookieService.createExpiredRefreshTokenCookie();
+    return ResponseEntity.ok()
+      .header(HttpHeaders.SET_COOKIE, cookie)
+      .build();
   }
 
-  private String setRefreshTokenCookie(String refreshToken) {
-    return buildRefreshTokenCookie(refreshToken, refreshTokenExpiration / 1000);
-  }
+  // ──────────────────────────────────────────────
+  //  Private helpers
+  // ──────────────────────────────────────────────
 
-  private String clearRefreshTokenCookie() {
-    return buildRefreshTokenCookie("", 0);
-  }
+  /**
+   * Attaches the refresh token as an HttpOnly cookie and strips
+   * it from the response body before sending.
+   */
+  private ResponseEntity<AuthResponseDTO> buildResponseWithCookie(
+    AuthResponseDTO authResponse,
+    HttpStatus status
+  ) {
+    String cookie = cookieService.createRefreshTokenCookie(authResponse.getRefreshToken());
+    authResponse.setRefreshToken(null);
 
-  private String buildRefreshTokenCookie(String value, long maxAge) {
-    return ResponseCookie.from(SecurityConstants.REFRESH_TOKEN_COOKIE, value)
-      .httpOnly(true)
-      .sameSite("Lax")
-      .secure(false)
-      .path("/api/auth")
-      .maxAge(maxAge)
-      .build()
-      .toString();
+    return ResponseEntity.status(status)
+      .header(HttpHeaders.SET_COOKIE, cookie)
+      .body(authResponse);
   }
 }
