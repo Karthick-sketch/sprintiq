@@ -18,7 +18,6 @@ public class ProjectsService {
     Project project = new Project();
     project.setName(request.getName());
     project.setDescription(request.getDescription());
-    project.setStatus(request.getStatus());
     return toDTO(projectsRepository.save(project));
   }
 
@@ -35,7 +34,8 @@ public class ProjectsService {
     Project project = findProjectById(id);
     project.setName(request.getName());
     project.setDescription(request.getDescription());
-    project.setStatus(request.getStatus());
+    project.setOwner(request.getOwner());
+    project.setTeamMembers(request.getTeamMembers());
     projectsRepository.save(project);
   }
 
@@ -55,7 +55,8 @@ public class ProjectsService {
     dto.setId(project.getId());
     dto.setName(project.getName());
     dto.setDescription(project.getDescription());
-    dto.setStatus(project.getStatus());
+    dto.setOwner(project.getOwner());
+    dto.setTeamMembers(project.getTeamMembers());
     return dto;
   }
 }

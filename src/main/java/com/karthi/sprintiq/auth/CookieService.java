@@ -34,7 +34,7 @@ public class CookieService {
       .httpOnly(true)
       .sameSite("Lax")
       .secure(false)
-      .path(SecurityConstants.PUBLIC_PATH)
+      .path(SecurityConstants.AUTH_PATH)
       .maxAge(maxAge)
       .build()
       .toString();
