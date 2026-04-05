@@ -25,13 +25,19 @@ public class ProjectsService {
     return projectsRepository.findAll().stream().map(this::toDTO).toList();
   }
 
-  public ProjectDTO getProjectById(Long id) {
-    Project project = findProjectById(id);
+  public Project getProjectById(Long id) {
+    return projectsRepository
+      .findById(id)
+      .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+  }
+
+  public ProjectDTO getProjectByIdToDTO(Long id) {
+    Project project = getProjectById(id);
     return toDTO(project);
   }
 
   public void updateProject(Long id, ProjectDTO request) {
-    Project project = findProjectById(id);
+    Project project = getProjectById(id);
     project.setName(request.getName());
     project.setDescription(request.getDescription());
     project.setOwner(request.getOwner());
@@ -40,14 +46,8 @@ public class ProjectsService {
   }
 
   public void deleteProject(Long id) {
-    Project project = findProjectById(id);
+    Project project = getProjectById(id);
     projectsRepository.delete(project);
-  }
-
-  private Project findProjectById(Long id) {
-    return projectsRepository
-      .findById(id)
-      .orElseThrow(() -> new EntityNotFoundException("Project not found"));
   }
 
   private ProjectDTO toDTO(Project project) {

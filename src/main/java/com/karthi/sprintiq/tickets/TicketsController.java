@@ -1,6 +1,6 @@
-package com.karthi.sprintiq.projects;
+package com.karthi.sprintiq.tickets;
 
-import com.karthi.sprintiq.projects.dto.ProjectDTO;
+import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,37 +13,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api/tickets")
 @RequiredArgsConstructor
-public class ProjectsController {
+public class TicketsController {
 
-  private final ProjectsService projectsService;
+  private final TicketsService ticketsService;
 
   @PostMapping
-  public ProjectDTO createProject(@RequestBody ProjectDTO request) {
-    return projectsService.createProject(request);
+  public TicketDTO createTicket(@RequestBody TicketDTO request) {
+    return ticketsService.createTicket(request);
   }
 
   @GetMapping
-  public List<ProjectDTO> getAllProjects() {
-    return projectsService.getAllProjects();
+  public List<TicketDTO> getAllTickets() {
+    return ticketsService.getAllTickets();
   }
 
   @GetMapping("/{id}")
-  public ProjectDTO getProjectById(@PathVariable Long id) {
-    return projectsService.getProjectByIdToDTO(id);
+  public TicketDTO getTicketById(@PathVariable Long id) {
+    return ticketsService.getTicketByIdToDTO(id);
   }
 
   @PutMapping("/{id}")
-  public void updateProject(
+  public void updateTicket(
     @PathVariable Long id,
-    @RequestBody ProjectDTO request
+    @RequestBody TicketDTO request
   ) {
-    projectsService.updateProject(id, request);
+    ticketsService.updateTicket(id, request);
   }
 
   @DeleteMapping("/{id}")
-  public void deleteProject(@PathVariable Long id) {
-    projectsService.deleteProject(id);
+  public void deleteTicket(@PathVariable Long id) {
+    ticketsService.deleteTicket(id);
   }
 }
