@@ -36,7 +36,7 @@ public class AuthService {
 
     User user = User.builder()
       .name(request.getName())
-      .email(request.getEmail())
+      .email(request.getEmail().toLowerCase())
       .password(passwordEncoder.encode(request.getPassword()))
       .role(Role.USER)
       .build();
@@ -47,26 +47,26 @@ public class AuthService {
   }
 
   public AuthResponseDTO login(LoginRequestDTO request) {
+    String email = request.getEmail().toLowerCase();
     try {
       authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-          request.getEmail(),
-          request.getPassword()
-        )
+        new UsernamePasswordAuthenticationToken(email, request.getPassword())
       );
     } catch (BadCredentialsException e) {
       throw new InvalidCredentialsException();
     }
 
-    return buildAuthResponse(request.getEmail());
+    return buildAuthResponse(email);
   }
 
   public AuthResponseDTO refreshToken(String refreshToken) {
     String email = jwtService.extractEmail(refreshToken);
     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-    if (!jwtService.isTokenValid(refreshToken, userDetails)
-      || !jwtService.isRefreshToken(refreshToken)) {
+    if (
+      !jwtService.isTokenValid(refreshToken, userDetails) ||
+      !jwtService.isRefreshToken(refreshToken)
+    ) {
       throw new InvalidTokenException("Invalid refresh token");
     }
 

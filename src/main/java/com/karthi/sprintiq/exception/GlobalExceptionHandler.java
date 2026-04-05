@@ -46,9 +46,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponseDTO> handleGenericException(
-    Exception ex
-  ) {
+  public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex) {
     return buildResponse(
       HttpStatus.INTERNAL_SERVER_ERROR,
       "An unexpected error occurred"
@@ -66,5 +64,12 @@ public class GlobalExceptionHandler {
       .timestamp(LocalDateTime.now())
       .build();
     return ResponseEntity.status(status).body(error);
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ErrorResponseDTO> handleEntityNotFound(
+    EntityNotFoundException ex
+  ) {
+    return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
   }
 }
