@@ -2,27 +2,38 @@ package com.karthi.sprintiq.projects;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
+import com.karthi.sprintiq.projects.dto.ProjectSectionCreateDTO;
 import com.karthi.sprintiq.projects.entity.Project;
+import com.karthi.sprintiq.projects.entity.ProjectSection;
+import com.karthi.sprintiq.projects.repository.ProjectSectionRepository;
 import com.karthi.sprintiq.projects.repository.ProjectsRepository;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProjectsService {
 
   private final ProjectsRepository projectsRepository;
+  private final ProjectSectionRepository projectSectionRepository;
 
+  // -------- Projects ------------------------------------------------------
   public ProjectDTO createProject(ProjectDTO request) {
     Project project = new Project();
     project.setName(request.getName());
     project.setDescription(request.getDescription());
-    return toDTO(projectsRepository.save(project));
+    project.setOwner(request.getOwner());
+    project.setTeamMembers(request.getTeamMembers());
+    return toProjectDTO(projectsRepository.save(project));
   }
 
   public List<ProjectDTO> getAllProjects() {
-    return projectsRepository.findAll().stream().map(this::toDTO).toList();
+    return projectsRepository
+      .findAll()
+      .stream()
+      .map(this::toProjectDTO)
+      .toList();
   }
 
   public Project getProjectById(Long id) {
@@ -33,7 +44,7 @@ public class ProjectsService {
 
   public ProjectDTO getProjectByIdToDTO(Long id) {
     Project project = getProjectById(id);
-    return toDTO(project);
+    return toProjectDTO(project);
   }
 
   public void updateProject(Long id, ProjectDTO request) {
@@ -50,7 +61,7 @@ public class ProjectsService {
     projectsRepository.delete(project);
   }
 
-  private ProjectDTO toDTO(Project project) {
+  private ProjectDTO toProjectDTO(Project project) {
     ProjectDTO dto = new ProjectDTO();
     dto.setId(project.getId());
     dto.setName(project.getName());
@@ -58,5 +69,17 @@ public class ProjectsService {
     dto.setOwner(project.getOwner());
     dto.setTeamMembers(project.getTeamMembers());
     return dto;
+  }
+
+  // -------- Project Sections ------------------------------------------------
+  public ProjectSectionCreateDTO createProjectSection(
+    Long projectId,
+    ProjectSectionCreateDTO projectSectionCreateDTO
+  ) {
+    ProjectSection projectSection = new ProjectSection();
+    projectSection.setName(projectSectionCreateDTO.getName());
+    projectSection.setProject(getProjectById(projectId));
+    projectSectionRepository.save(projectSection);
+    return projectSectionCreateDTO;
   }
 }

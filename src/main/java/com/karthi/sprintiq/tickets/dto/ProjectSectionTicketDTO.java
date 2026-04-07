@@ -3,14 +3,11 @@ package com.karthi.sprintiq.tickets.dto;
 import lombok.Data;
 
 @Data
-public class TicketDTO {
+public class ProjectSectionTicketDTO {
 
   private Long id;
   private String title;
-  private String description;
   private String status;
   private String priority;
   private String assignee;
-  private Long projectId;
-  private Long sectionId;
 }

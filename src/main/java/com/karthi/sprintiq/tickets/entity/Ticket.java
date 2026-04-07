@@ -2,6 +2,7 @@ package com.karthi.sprintiq.tickets.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.karthi.sprintiq.projects.entity.Project;
+import com.karthi.sprintiq.projects.entity.ProjectSection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,4 +37,9 @@ public class Ticket {
   @ManyToOne(optional = false)
   @JoinColumn(name = "project_id")
   private Project project;
+
+  @JsonIgnore
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "section_id")
+  private ProjectSection projectSection;
 }

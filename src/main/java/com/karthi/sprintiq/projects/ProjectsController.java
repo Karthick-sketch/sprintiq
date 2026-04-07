@@ -1,6 +1,7 @@
 package com.karthi.sprintiq.projects;
 
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
+import com.karthi.sprintiq.projects.dto.ProjectSectionCreateDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,5 +46,16 @@ public class ProjectsController {
   @DeleteMapping("/{id}")
   public void deleteProject(@PathVariable Long id) {
     projectsService.deleteProject(id);
+  }
+
+  @PostMapping("/{projectId}/sections")
+  public ProjectSectionCreateDTO createProjectSection(
+    @PathVariable Long projectId,
+    @RequestBody ProjectSectionCreateDTO projectSectionCreateDTO
+  ) {
+    return projectsService.createProjectSection(
+      projectId,
+      projectSectionCreateDTO
+    );
   }
 }
