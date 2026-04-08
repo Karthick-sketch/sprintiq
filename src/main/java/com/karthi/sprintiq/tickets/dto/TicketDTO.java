@@ -10,7 +10,6 @@ public class TicketDTO {
   private String description;
   private String status;
   private String priority;
-  private String assignee;
-  private Long projectId;
+  private Long assigneeId;
   private Long sectionId;
 }

@@ -10,4 +10,5 @@ public class ProjectSectionTicketDTO {
   private String status;
   private String priority;
   private String assignee;
+  private Long sectionId;
 }

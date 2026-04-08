@@ -1,8 +1,11 @@
 package com.karthi.sprintiq.user.entity;
 
+import com.karthi.sprintiq.projects.entity.Project;
+import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.user.enums.Role;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -35,4 +38,10 @@ public class User {
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;
+
+  @OneToMany(mappedBy = "owner")
+  private List<Project> projects;
+
+  @OneToMany(mappedBy = "assignee")
+  private List<Ticket> tickets;
 }

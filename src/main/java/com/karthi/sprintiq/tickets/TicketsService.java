@@ -5,6 +5,7 @@ import com.karthi.sprintiq.projects.ProjectsService;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.tickets.repository.TicketsRepository;
+import com.karthi.sprintiq.user.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class TicketsService {
 
   private final TicketsRepository ticketsRepository;
   private final ProjectsService projectsService;
+  private final UserService userService;
 
   public TicketDTO createTicket(TicketDTO request) {
     Ticket ticket = new Ticket();
@@ -22,8 +24,8 @@ public class TicketsService {
     ticket.setDescription(request.getDescription());
     ticket.setStatus(request.getStatus());
     ticket.setPriority(request.getPriority());
-    ticket.setAssignee(request.getAssignee());
-    ticket.setProject(projectsService.getProjectById(request.getProjectId()));
+    ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
+    ticket.setSection(projectsService.getSectionById(request.getSectionId()));
     return toDTO(ticketsRepository.save(ticket));
   }
 
@@ -48,7 +50,8 @@ public class TicketsService {
     ticket.setDescription(request.getDescription());
     ticket.setStatus(request.getStatus());
     ticket.setPriority(request.getPriority());
-    ticket.setAssignee(request.getAssignee());
+    ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
+    ticket.setSection(projectsService.getSectionById(request.getSectionId()));
     ticketsRepository.save(ticket);
   }
 
@@ -64,8 +67,8 @@ public class TicketsService {
     dto.setDescription(ticket.getDescription());
     dto.setStatus(ticket.getStatus());
     dto.setPriority(ticket.getPriority());
-    dto.setAssignee(ticket.getAssignee());
-    dto.setProjectId(ticket.getProject().getId());
+    dto.setAssigneeId(ticket.getAssignee().getId());
+    dto.setSectionId(ticket.getSection().getId());
     return dto;
   }
 }

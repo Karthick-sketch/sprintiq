@@ -9,6 +9,6 @@ public class ProjectDTO {
   private Long id;
   private String name;
   private String description;
-  private String owner;
-  private List<String> teamMembers;
+  private Long ownerId;
+  private List<Long> teamMemberIds;
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class ProjectSectionDTO {
+public class SectionDTO {
 
   private Long id;
   private String name;
