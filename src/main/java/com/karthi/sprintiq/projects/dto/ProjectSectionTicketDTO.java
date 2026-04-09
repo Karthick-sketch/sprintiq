@@ -1,4 +1,4 @@
-package com.karthi.sprintiq.tickets.dto;
+package com.karthi.sprintiq.projects.dto;
 
 import lombok.Data;
 
@@ -9,6 +9,6 @@ public class ProjectSectionTicketDTO {
   private String title;
   private String status;
   private String priority;
-  private String assignee;
+  private Long assigneeId;
   private Long sectionId;
 }

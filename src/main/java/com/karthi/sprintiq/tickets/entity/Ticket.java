@@ -2,6 +2,7 @@ package com.karthi.sprintiq.tickets.entity;
 
 import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.user.entity.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,10 +26,17 @@ public class Ticket {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
   private String title;
+
   private String description;
+
+  @Column(nullable = false)
   private String status;
+
+  @Column(nullable = false)
   private String priority;
+
   private Date dueDate;
 
   @ManyToOne(optional = false)

@@ -2,6 +2,8 @@ package com.karthi.sprintiq.projects;
 
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
 import com.karthi.sprintiq.projects.dto.SectionCreateDTO;
+import com.karthi.sprintiq.projects.dto.SectionDTO;
+import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,5 +56,18 @@ public class ProjectsController {
     @RequestBody SectionCreateDTO sectionCreateDTO
   ) {
     return projectsService.createSection(projectId, sectionCreateDTO);
+  }
+
+  @GetMapping("/{projectId}/sections")
+  public List<SectionDTO> getSections(@PathVariable Long projectId) {
+    return projectsService.getSections(projectId);
+  }
+
+  @PostMapping("/{sectionId}/tickets")
+  public TicketDTO addTicketToSection(
+    @PathVariable Long sectionId,
+    @RequestBody TicketDTO ticket
+  ) {
+    return projectsService.addTicketToSection(sectionId, ticket);
   }
 }
