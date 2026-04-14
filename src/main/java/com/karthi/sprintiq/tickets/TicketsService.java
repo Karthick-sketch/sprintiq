@@ -3,6 +3,7 @@ package com.karthi.sprintiq.tickets;
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.ProjectsService;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
+import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.tickets.repository.TicketsRepository;
 import com.karthi.sprintiq.user.UserService;
@@ -29,8 +30,12 @@ public class TicketsService {
     return toDTO(ticketsRepository.save(ticket));
   }
 
-  public List<TicketDTO> getAllTickets() {
-    return ticketsRepository.findAll().stream().map(this::toDTO).toList();
+  public List<TicketListingDTO> getAllTickets() {
+    return ticketsRepository
+      .findAll()
+      .stream()
+      .map(this::toListingDTO)
+      .toList();
   }
 
   private Ticket getTicketById(Long id) {
@@ -69,6 +74,18 @@ public class TicketsService {
     dto.setPriority(ticket.getPriority());
     dto.setAssigneeId(ticket.getAssignee().getId());
     dto.setSectionId(ticket.getSection().getId());
+    return dto;
+  }
+
+  private TicketListingDTO toListingDTO(Ticket ticket) {
+    TicketListingDTO dto = new TicketListingDTO();
+    dto.setId(ticket.getId());
+    dto.setTitle(ticket.getTitle());
+    dto.setStatus(ticket.getStatus());
+    dto.setPriority(ticket.getPriority());
+    dto.setAssigneeId(ticket.getAssignee().getId());
+    dto.setDueDate(ticket.getDueDate());
+    dto.setProjectId(ticket.getSection().getProject().getId());
     return dto;
   }
 }

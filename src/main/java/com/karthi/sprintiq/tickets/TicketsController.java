@@ -1,6 +1,7 @@
 package com.karthi.sprintiq.tickets;
 
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
+import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,7 @@ public class TicketsController {
   }
 
   @GetMapping
-  public List<TicketDTO> getAllTickets() {
+  public List<TicketListingDTO> getAllTickets() {
     return ticketsService.getAllTickets();
   }
 
