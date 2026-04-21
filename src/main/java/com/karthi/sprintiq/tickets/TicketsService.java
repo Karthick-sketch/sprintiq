@@ -3,11 +3,16 @@ package com.karthi.sprintiq.tickets;
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.ProjectsService;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
+import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
+import com.karthi.sprintiq.tickets.enums.Priority;
+import com.karthi.sprintiq.tickets.enums.Status;
 import com.karthi.sprintiq.tickets.repository.TicketsRepository;
+import com.karthi.sprintiq.tickets.specification.TicketSpecification;
 import com.karthi.sprintiq.user.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,8 +34,25 @@ public class TicketsService {
     return toDTO(ticketsRepository.save(ticket));
   }
 
-  public List<TicketDTO> getAllTickets() {
-    return ticketsRepository.findAll().stream().map(this::toDTO).toList();
+  public List<TicketListingDTO> getAllTickets(
+    String search,
+    Status status,
+    Priority priority,
+    Long assigneeId,
+    Long projectId
+  ) {
+    Specification<Ticket> ticketSpecification = buildSpecification(
+      search,
+      status,
+      priority,
+      assigneeId,
+      projectId
+    );
+    return ticketsRepository
+      .findAll(ticketSpecification)
+      .stream()
+      .map(this::toListingDTO)
+      .toList();
   }
 
   private Ticket getTicketById(Long id) {
@@ -70,5 +92,40 @@ public class TicketsService {
     dto.setAssigneeId(ticket.getAssignee().getId());
     dto.setSectionId(ticket.getSection().getId());
     return dto;
+  }
+
+  private TicketListingDTO toListingDTO(Ticket ticket) {
+    TicketListingDTO dto = new TicketListingDTO();
+    dto.setId(ticket.getId());
+    dto.setTitle(ticket.getTitle());
+    dto.setStatus(ticket.getStatus());
+    dto.setPriority(ticket.getPriority());
+    dto.setAssignee(userService.toDTO(ticket.getAssignee()));
+    dto.setDueDate(ticket.getDueDate());
+    dto.setProject(
+      projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
+    );
+    return dto;
+  }
+
+  private Specification<Ticket> buildSpecification(
+    String search,
+    Status status,
+    Priority priority,
+    Long assigneeId,
+    Long projectId
+  ) {
+    Specification<Ticket> ticketSpecification = (
+      root,
+      query,
+      criteriaBuilder
+    ) -> criteriaBuilder.conjunction();
+    return ticketSpecification
+      .and(TicketSpecification.withTitleContaining(search))
+      .and(TicketSpecification.hasStatus(status))
+      .and(TicketSpecification.hasPriority(priority))
+      .and(TicketSpecification.hasAssigneeId(assigneeId))
+      .and(TicketSpecification.hasProjectId(projectId))
+      .and(TicketSpecification.orderByDueDateAsc());
   }
 }

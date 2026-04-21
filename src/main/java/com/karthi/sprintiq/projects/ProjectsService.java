@@ -3,6 +3,7 @@ package com.karthi.sprintiq.projects;
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
 import com.karthi.sprintiq.projects.dto.ProjectSectionTicketDTO;
+import com.karthi.sprintiq.projects.dto.ProjectTicketListDTO;
 import com.karthi.sprintiq.projects.dto.SectionCreateDTO;
 import com.karthi.sprintiq.projects.dto.SectionDTO;
 import com.karthi.sprintiq.projects.entity.Project;
@@ -182,5 +183,12 @@ public class ProjectsService {
     ticket.setAssignee(userService.getUserById(dto.getAssigneeId()));
     ticket.setSection(getSectionById(dto.getSectionId()));
     return ticket;
+  }
+
+  public ProjectTicketListDTO toProjectTicketListDTO(Project project) {
+    ProjectTicketListDTO dto = new ProjectTicketListDTO();
+    dto.setId(project.getId());
+    dto.setName(project.getName());
+    return dto;
   }
 }
