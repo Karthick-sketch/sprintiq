@@ -2,6 +2,7 @@ package com.karthi.sprintiq.tickets.dto;
 
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
+import com.karthi.sprintiq.user.dto.UserDTO;
 import java.sql.Date;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ public class TicketListingDTO {
   private String title;
   private Status status;
   private Priority priority;
-  private Long assigneeId;
+  private UserDTO assignee;
   private Date dueDate;
   private Long projectId;
 }

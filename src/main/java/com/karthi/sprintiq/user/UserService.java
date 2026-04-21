@@ -1,8 +1,8 @@
 package com.karthi.sprintiq.user;
 
 import com.karthi.sprintiq.exception.UserNotFoundException;
+import com.karthi.sprintiq.user.dto.UserDTO;
 import com.karthi.sprintiq.user.dto.UserRequestDTO;
-import com.karthi.sprintiq.user.dto.UserResponseDTO;
 import com.karthi.sprintiq.user.entity.User;
 import com.karthi.sprintiq.user.repository.UserRepository;
 import java.util.List;
@@ -23,25 +23,25 @@ public class UserService {
       .orElseThrow(() -> new UserNotFoundException(id));
   }
 
-  public UserResponseDTO getUserByIdToDTO(Long id) {
+  public UserDTO getUserByIdToDTO(Long id) {
     User user = getUserById(id);
-    return toResponseDto(user);
+    return toDTO(user);
   }
 
-  public UserResponseDTO getUserByEmail(String email) {
+  public UserDTO getUserByEmail(String email) {
     User user = userRepository
       .findByEmail(email)
       .orElseThrow(() ->
         new UserNotFoundException("User not found with email: " + email)
       );
-    return toResponseDto(user);
+    return toDTO(user);
   }
 
-  public List<UserResponseDTO> getAllUsers() {
-    return userRepository.findAll().stream().map(this::toResponseDto).toList();
+  public List<UserDTO> getAllUsers() {
+    return userRepository.findAll().stream().map(this::toDTO).toList();
   }
 
-  public UserResponseDTO updateUser(Long id, UserRequestDTO dto) {
+  public UserDTO updateUser(Long id, UserRequestDTO dto) {
     User user = userRepository
       .findById(id)
       .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
@@ -56,7 +56,7 @@ public class UserService {
     }
 
     User updated = userRepository.save(user);
-    return toResponseDto(updated);
+    return toDTO(updated);
   }
 
   public void deleteUser(Long id) {
@@ -66,13 +66,12 @@ public class UserService {
     userRepository.deleteById(id);
   }
 
-  private UserResponseDTO toResponseDto(User user) {
-    return UserResponseDTO.builder()
+  public UserDTO toDTO(User user) {
+    return UserDTO.builder()
       .id(user.getId())
       .name(user.getName())
       .email(user.getEmail())
       .role(user.getRole())
-      .createdAt(user.getCreatedAt())
       .build();
   }
 }

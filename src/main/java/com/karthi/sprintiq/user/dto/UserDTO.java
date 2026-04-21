@@ -1,7 +1,6 @@
 package com.karthi.sprintiq.user.dto;
 
 import com.karthi.sprintiq.user.enums.Role;
-import java.time.LocalDateTime;
 import lombok.*;
 
 @Getter
@@ -9,11 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResponseDTO {
+public class UserDTO {
 
   private Long id;
   private String name;
   private String email;
   private Role role;
-  private LocalDateTime createdAt;
 }
