@@ -5,10 +5,14 @@ import com.karthi.sprintiq.projects.ProjectsService;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
+import com.karthi.sprintiq.tickets.enums.Priority;
+import com.karthi.sprintiq.tickets.enums.Status;
 import com.karthi.sprintiq.tickets.repository.TicketsRepository;
+import com.karthi.sprintiq.tickets.specification.TicketSpecification;
 import com.karthi.sprintiq.user.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,9 +34,22 @@ public class TicketsService {
     return toDTO(ticketsRepository.save(ticket));
   }
 
-  public List<TicketListingDTO> getAllTickets() {
+  public List<TicketListingDTO> getAllTickets(
+    String search,
+    Status status,
+    Priority priority,
+    Long assigneeId,
+    Long projectId
+  ) {
+    Specification<Ticket> ticketSpecification = buildSpecification(
+      search,
+      status,
+      priority,
+      assigneeId,
+      projectId
+    );
     return ticketsRepository
-      .findAll()
+      .findAll(ticketSpecification)
       .stream()
       .map(this::toListingDTO)
       .toList();
@@ -87,5 +104,25 @@ public class TicketsService {
     dto.setDueDate(ticket.getDueDate());
     dto.setProjectId(ticket.getSection().getProject().getId());
     return dto;
+  }
+
+  private Specification<Ticket> buildSpecification(
+    String search,
+    Status status,
+    Priority priority,
+    Long assigneeId,
+    Long projectId
+  ) {
+    Specification<Ticket> ticketSpecification = (
+      root,
+      query,
+      criteriaBuilder
+    ) -> criteriaBuilder.conjunction();
+    return ticketSpecification
+      .and(TicketSpecification.withTitleContaining(search))
+      .and(TicketSpecification.hasStatus(status))
+      .and(TicketSpecification.hasPriority(priority))
+      .and(TicketSpecification.hasAssigneeId(assigneeId))
+      .and(TicketSpecification.hasProjectId(projectId));
   }
 }
