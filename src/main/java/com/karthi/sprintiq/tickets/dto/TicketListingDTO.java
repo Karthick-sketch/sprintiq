@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.tickets.dto;
 
+import com.karthi.sprintiq.projects.dto.ProjectTicketListDTO;
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
 import com.karthi.sprintiq.user.dto.UserDTO;
@@ -15,5 +16,5 @@ public class TicketListingDTO {
   private Priority priority;
   private UserDTO assignee;
   private Date dueDate;
-  private Long projectId;
+  private ProjectTicketListDTO project;
 }

@@ -102,7 +102,9 @@ public class TicketsService {
     dto.setPriority(ticket.getPriority());
     dto.setAssignee(userService.toDTO(ticket.getAssignee()));
     dto.setDueDate(ticket.getDueDate());
-    dto.setProjectId(ticket.getSection().getProject().getId());
+    dto.setProject(
+      projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
+    );
     return dto;
   }
 
@@ -123,6 +125,7 @@ public class TicketsService {
       .and(TicketSpecification.hasStatus(status))
       .and(TicketSpecification.hasPriority(priority))
       .and(TicketSpecification.hasAssigneeId(assigneeId))
-      .and(TicketSpecification.hasProjectId(projectId));
+      .and(TicketSpecification.hasProjectId(projectId))
+      .and(TicketSpecification.orderByDueDateAsc());
   }
 }

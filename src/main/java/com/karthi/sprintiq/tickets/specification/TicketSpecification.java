@@ -54,4 +54,11 @@ public class TicketSpecification {
       );
     };
   }
+
+  public static Specification<Ticket> orderByDueDateAsc() {
+    return (root, query, criteriaBuilder) -> {
+      query.orderBy(criteriaBuilder.asc(root.get("dueDate")));
+      return criteriaBuilder.conjunction();
+    };
+  }
 }
