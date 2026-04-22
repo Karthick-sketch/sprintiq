@@ -167,7 +167,8 @@ public class ProjectsService {
     dto.setTitle(ticket.getTitle());
     dto.setStatus(ticket.getStatus());
     dto.setPriority(ticket.getPriority());
-    dto.setAssigneeId(ticket.getAssignee().getId());
+    dto.setAssignee(userService.toDTO(ticket.getAssignee()));
+    dto.setDueDate(ticket.getDueDate());
     dto.setSectionId(ticket.getSection().getId());
     return dto;
   }
