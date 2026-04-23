@@ -52,4 +52,6 @@ public class Ticket {
   @ManyToOne(optional = false)
   @JoinColumn(name = "section_id")
   private Section section;
+
+  private Integer orderIndex;
 }

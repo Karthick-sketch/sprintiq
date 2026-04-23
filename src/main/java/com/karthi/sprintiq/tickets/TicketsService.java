@@ -2,8 +2,10 @@ package com.karthi.sprintiq.tickets;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.ProjectsService;
+import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
+import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
@@ -11,6 +13,8 @@ import com.karthi.sprintiq.tickets.repository.TicketsRepository;
 import com.karthi.sprintiq.tickets.specification.TicketSpecification;
 import com.karthi.sprintiq.user.UserService;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -80,6 +84,27 @@ public class TicketsService {
   public void deleteTicket(Long id) {
     Ticket ticket = getTicketById(id);
     ticketsRepository.delete(ticket);
+  }
+
+  public void reorderTickets(
+    Long sectionId,
+    List<TicketOrderDTO> ticketOrders
+  ) {
+    Map<Long, Integer> ticketOrderMap = ticketOrders
+      .stream()
+      .collect(
+        Collectors.toMap(TicketOrderDTO::getId, TicketOrderDTO::getOrderIndex)
+      );
+    List<Ticket> tickets = ticketsRepository.findByIdIn(
+      ticketOrderMap.keySet()
+    );
+    Section section = projectsService.getSectionById(sectionId);
+
+    tickets.forEach(ticket -> {
+      ticket.setSection(section);
+      ticket.setOrderIndex(ticketOrderMap.get(ticket.getId()));
+    });
+    ticketsRepository.saveAll(tickets);
   }
 
   private TicketDTO toDTO(Ticket ticket) {

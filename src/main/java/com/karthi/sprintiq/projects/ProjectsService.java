@@ -15,6 +15,7 @@ import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.user.UserService;
 import com.karthi.sprintiq.user.entity.User;
+import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -155,6 +156,7 @@ public class ProjectsService {
       section
         .getTickets()
         .stream()
+        .sorted(Comparator.comparing(Ticket::getOrderIndex))
         .map(this::toProjectSectionTicketDTO)
         .toList()
     );
@@ -170,6 +172,7 @@ public class ProjectsService {
     dto.setAssignee(userService.toDTO(ticket.getAssignee()));
     dto.setDueDate(ticket.getDueDate());
     dto.setSectionId(ticket.getSection().getId());
+    dto.setOrderIndex(ticket.getOrderIndex());
     return dto;
   }
 
@@ -183,6 +186,7 @@ public class ProjectsService {
     ticket.setDueDate(dto.getDueDate());
     ticket.setAssignee(userService.getUserById(dto.getAssigneeId()));
     ticket.setSection(getSectionById(dto.getSectionId()));
+    ticket.setOrderIndex(dto.getOrderIndex());
     return ticket;
   }
 

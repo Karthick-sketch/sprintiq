@@ -16,4 +16,5 @@ public class TicketDTO {
   private Date dueDate;
   private Long assigneeId;
   private Long sectionId;
+  private Integer orderIndex;
 }

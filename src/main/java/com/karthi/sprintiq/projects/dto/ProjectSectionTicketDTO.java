@@ -16,4 +16,5 @@ public class ProjectSectionTicketDTO {
   private UserDTO assignee;
   private Date dueDate;
   private Long sectionId;
+  private Integer orderIndex;
 }

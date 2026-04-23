@@ -2,6 +2,7 @@ package com.karthi.sprintiq.tickets;
 
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
+import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
 import java.util.List;
@@ -61,5 +62,13 @@ public class TicketsController {
   @DeleteMapping("/{id}")
   public void deleteTicket(@PathVariable Long id) {
     ticketsService.deleteTicket(id);
+  }
+
+  @PutMapping("/section/{sectionId}/reorder")
+  public void reorderTickets(
+    @PathVariable Long sectionId,
+    @RequestBody List<TicketOrderDTO> tickets
+  ) {
+    ticketsService.reorderTickets(sectionId, tickets);
   }
 }
