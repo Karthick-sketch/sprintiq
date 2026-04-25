@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +87,7 @@ public class TicketsService {
     ticketsRepository.delete(ticket);
   }
 
+  @Transactional
   public void reorderTickets(
     Long sectionId,
     List<TicketOrderDTO> ticketOrders

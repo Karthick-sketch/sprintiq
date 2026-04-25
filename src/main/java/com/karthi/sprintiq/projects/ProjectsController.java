@@ -51,7 +51,7 @@ public class ProjectsController {
   }
 
   @PostMapping("/{projectId}/sections")
-  public SectionCreateDTO createSection(
+  public SectionDTO createSection(
     @PathVariable Long projectId,
     @RequestBody SectionCreateDTO sectionCreateDTO
   ) {

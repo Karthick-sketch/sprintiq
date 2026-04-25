@@ -15,8 +15,10 @@ import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.user.UserService;
 import com.karthi.sprintiq.user.entity.User;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -107,15 +109,14 @@ public class ProjectsService {
   }
 
   // -------- Project Sections ------------------------------------------------
-  public SectionCreateDTO createSection(
+  public SectionDTO createSection(
     Long projectId,
     SectionCreateDTO sectionCreateDTO
   ) {
     Section section = new Section();
     section.setName(sectionCreateDTO.getName());
     section.setProject(getProjectById(projectId));
-    sectionRepository.save(section);
-    return sectionCreateDTO;
+    return toSectionDTO(sectionRepository.save(section));
   }
 
   public List<SectionDTO> getSections(Long projectId) {
@@ -153,12 +154,15 @@ public class ProjectsService {
     dto.setId(section.getId());
     dto.setName(section.getName());
     dto.setTickets(
-      section
-        .getTickets()
-        .stream()
-        .sorted(Comparator.comparing(Ticket::getOrderIndex))
-        .map(this::toProjectSectionTicketDTO)
-        .toList()
+      Optional.ofNullable(section.getTickets())
+        .map(tickets ->
+          tickets
+            .stream()
+            .sorted(Comparator.comparing(Ticket::getOrderIndex))
+            .map(this::toProjectSectionTicketDTO)
+            .toList()
+        )
+        .orElse(Collections.emptyList())
     );
     return dto;
   }

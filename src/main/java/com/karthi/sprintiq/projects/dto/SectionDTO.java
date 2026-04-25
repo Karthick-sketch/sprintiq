@@ -8,5 +8,6 @@ public class SectionDTO {
 
   private Long id;
   private String name;
+  private Long projectId;
   private List<ProjectSectionTicketDTO> tickets;
 }
