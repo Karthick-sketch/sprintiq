@@ -6,4 +6,5 @@ import lombok.Data;
 public class SectionCreateDTO {
 
   private String name;
+  private Integer orderIndex;
 }

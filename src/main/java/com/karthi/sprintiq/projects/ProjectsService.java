@@ -114,6 +114,7 @@ public class ProjectsService {
     Section section = new Section();
     section.setName(sectionCreateDTO.getName());
     section.setProject(getProjectById(projectId));
+    section.setOrderIndex(sectionCreateDTO.getOrderIndex());
     return toSectionDTO(sectionRepository.save(section));
   }
 
@@ -122,6 +123,7 @@ public class ProjectsService {
       return sectionRepository
         .findByProjectId(projectId)
         .stream()
+        .sorted(Comparator.comparing(Section::getOrderIndex))
         .map(this::toSectionDTO)
         .toList();
     } catch (Exception e) {
@@ -167,6 +169,7 @@ public class ProjectsService {
           )
           .orElse(Collections.emptyList())
       )
+      .orderIndex(section.getOrderIndex())
       .build();
   }
 

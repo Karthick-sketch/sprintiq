@@ -39,4 +39,7 @@ public class Section {
     cascade = { CascadeType.PERSIST, CascadeType.MERGE }
   )
   private List<Ticket> tickets;
+
+  @Column(name = "order_index", nullable = false)
+  private Integer orderIndex;
 }

@@ -46,5 +46,6 @@ public class Ticket {
   @JoinColumn(name = "section_id")
   private Section section;
 
+  @Column(name = "order_index", nullable = false)
   private Integer orderIndex;
 }

@@ -16,4 +16,5 @@ public class SectionDTO {
   private String name;
   private Long projectId;
   private List<ProjectSectionTicketDTO> tickets;
+  private Integer orderIndex;
 }
