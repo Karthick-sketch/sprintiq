@@ -6,6 +6,7 @@ import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
+import com.karthi.sprintiq.tickets.dto.TicketRequestDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
@@ -28,14 +29,16 @@ public class TicketsService {
   private final ProjectsService projectsService;
   private final UserService userService;
 
-  public TicketDTO createTicket(TicketDTO request) {
+  public TicketDTO createTicket(TicketRequestDTO request) {
     Ticket ticket = new Ticket();
     ticket.setTitle(request.getTitle());
     ticket.setDescription(request.getDescription());
     ticket.setStatus(request.getStatus());
     ticket.setPriority(request.getPriority());
+    ticket.setDueDate(request.getDueDate());
     ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
     ticket.setSection(projectsService.getSectionById(request.getSectionId()));
+    ticket.setOrderIndex(request.getOrderIndex());
     return toDTO(ticketsRepository.save(ticket));
   }
 
@@ -77,7 +80,7 @@ public class TicketsService {
     ticket.setDescription(request.getDescription());
     ticket.setStatus(request.getStatus());
     ticket.setPriority(request.getPriority());
-    ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
+    ticket.setAssignee(userService.getUserById(request.getAssignee().getId()));
     ticket.setSection(projectsService.getSectionById(request.getSectionId()));
     ticketsRepository.save(ticket);
   }
@@ -116,7 +119,7 @@ public class TicketsService {
     dto.setDescription(ticket.getDescription());
     dto.setStatus(ticket.getStatus());
     dto.setPriority(ticket.getPriority());
-    dto.setAssigneeId(ticket.getAssignee().getId());
+    dto.setAssignee(userService.toDTO(ticket.getAssignee()));
     dto.setSectionId(ticket.getSection().getId());
     return dto;
   }

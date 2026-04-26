@@ -59,7 +59,7 @@ public class ProjectsController {
   }
 
   @GetMapping("/{projectId}/sections")
-  public List<SectionDTO> getSections(@PathVariable Long projectId) {
+  public List<SectionDTO> getSections(@PathVariable long projectId) {
     return projectsService.getSections(projectId);
   }
 

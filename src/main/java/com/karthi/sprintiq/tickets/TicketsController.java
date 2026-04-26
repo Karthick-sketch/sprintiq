@@ -3,6 +3,7 @@ package com.karthi.sprintiq.tickets;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
+import com.karthi.sprintiq.tickets.dto.TicketRequestDTO;
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
 import java.util.List;
@@ -25,7 +26,7 @@ public class TicketsController {
   private final TicketsService ticketsService;
 
   @PostMapping
-  public TicketDTO createTicket(@RequestBody TicketDTO request) {
+  public TicketDTO createTicket(@RequestBody TicketRequestDTO request) {
     return ticketsService.createTicket(request);
   }
 

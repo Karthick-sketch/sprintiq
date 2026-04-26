@@ -20,8 +20,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProjectsService {
@@ -119,12 +121,17 @@ public class ProjectsService {
     return toSectionDTO(sectionRepository.save(section));
   }
 
-  public List<SectionDTO> getSections(Long projectId) {
-    return sectionRepository
-      .findByProjectId(projectId)
-      .stream()
-      .map(this::toSectionDTO)
-      .toList();
+  public List<SectionDTO> getSections(long projectId) {
+    try {
+      return sectionRepository
+        .findByProjectId(projectId)
+        .stream()
+        .map(this::toSectionDTO)
+        .toList();
+    } catch (Exception e) {
+      log.error("Error fetching sections for project {}", projectId, e);
+      return Collections.emptyList();
+    }
   }
 
   public Section getSectionById(Long sectionId) {
@@ -188,7 +195,7 @@ public class ProjectsService {
     ticket.setStatus(dto.getStatus());
     ticket.setPriority(dto.getPriority());
     ticket.setDueDate(dto.getDueDate());
-    ticket.setAssignee(userService.getUserById(dto.getAssigneeId()));
+    ticket.setAssignee(userService.getUserById(dto.getAssignee().getId()));
     ticket.setSection(getSectionById(dto.getSectionId()));
     ticket.setOrderIndex(dto.getOrderIndex());
     return ticket;

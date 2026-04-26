@@ -30,8 +30,8 @@ public class Section {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne
-  @JoinColumn(name = "project_id")
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "project_id", nullable = false)
   private Project project;
 
   @OneToMany(
