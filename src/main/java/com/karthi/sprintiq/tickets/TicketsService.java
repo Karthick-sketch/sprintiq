@@ -2,8 +2,11 @@ package com.karthi.sprintiq.tickets;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.ProjectsService;
+import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
+import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
+import com.karthi.sprintiq.tickets.dto.TicketRequestDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.tickets.enums.Priority;
 import com.karthi.sprintiq.tickets.enums.Status;
@@ -11,9 +14,12 @@ import com.karthi.sprintiq.tickets.repository.TicketsRepository;
 import com.karthi.sprintiq.tickets.specification.TicketSpecification;
 import com.karthi.sprintiq.user.UserService;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,15 +29,8 @@ public class TicketsService {
   private final ProjectsService projectsService;
   private final UserService userService;
 
-  public TicketDTO createTicket(TicketDTO request) {
-    Ticket ticket = new Ticket();
-    ticket.setTitle(request.getTitle());
-    ticket.setDescription(request.getDescription());
-    ticket.setStatus(request.getStatus());
-    ticket.setPriority(request.getPriority());
-    ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
-    ticket.setSection(projectsService.getSectionById(request.getSectionId()));
-    return toDTO(ticketsRepository.save(ticket));
+  public TicketDTO createTicket(TicketRequestDTO request) {
+    return toDTO(ticketsRepository.save(toTicket(request)));
   }
 
   public List<TicketListingDTO> getAllTickets(
@@ -62,8 +61,7 @@ public class TicketsService {
   }
 
   public TicketDTO getTicketByIdToDTO(Long id) {
-    Ticket ticket = getTicketById(id);
-    return toDTO(ticket);
+    return toDTO(getTicketById(id));
   }
 
   public void updateTicket(Long id, TicketDTO request) {
@@ -72,40 +70,76 @@ public class TicketsService {
     ticket.setDescription(request.getDescription());
     ticket.setStatus(request.getStatus());
     ticket.setPriority(request.getPriority());
-    ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
+    ticket.setAssignee(userService.getUserById(request.getAssignee().getId()));
     ticket.setSection(projectsService.getSectionById(request.getSectionId()));
     ticketsRepository.save(ticket);
   }
 
   public void deleteTicket(Long id) {
-    Ticket ticket = getTicketById(id);
-    ticketsRepository.delete(ticket);
+    ticketsRepository.delete(getTicketById(id));
+  }
+
+  @Transactional
+  public void reorderTickets(
+    Long sectionId,
+    List<TicketOrderDTO> ticketOrders
+  ) {
+    Map<Long, Integer> ticketOrderMap = ticketOrders
+      .stream()
+      .collect(
+        Collectors.toMap(TicketOrderDTO::getId, TicketOrderDTO::getOrderIndex)
+      );
+    List<Ticket> tickets = ticketsRepository.findByIdIn(
+      ticketOrderMap.keySet()
+    );
+    Section section = projectsService.getSectionById(sectionId);
+
+    tickets.forEach(ticket -> {
+      ticket.setSection(section);
+      ticket.setOrderIndex(ticketOrderMap.get(ticket.getId()));
+    });
+    ticketsRepository.saveAll(tickets);
+  }
+
+  private Ticket toTicket(TicketRequestDTO request) {
+    return Ticket.builder()
+      .title(request.getTitle())
+      .description(request.getDescription())
+      .status(request.getStatus())
+      .priority(request.getPriority())
+      .dueDate(request.getDueDate())
+      .assignee(userService.getUserById(request.getAssigneeId()))
+      .section(projectsService.getSectionById(request.getSectionId()))
+      .orderIndex(request.getOrderIndex())
+      .build();
   }
 
   private TicketDTO toDTO(Ticket ticket) {
-    TicketDTO dto = new TicketDTO();
-    dto.setId(ticket.getId());
-    dto.setTitle(ticket.getTitle());
-    dto.setDescription(ticket.getDescription());
-    dto.setStatus(ticket.getStatus());
-    dto.setPriority(ticket.getPriority());
-    dto.setAssigneeId(ticket.getAssignee().getId());
-    dto.setSectionId(ticket.getSection().getId());
-    return dto;
+    return TicketDTO.builder()
+      .id(ticket.getId())
+      .title(ticket.getTitle())
+      .description(ticket.getDescription())
+      .status(ticket.getStatus())
+      .priority(ticket.getPriority())
+      .dueDate(ticket.getDueDate())
+      .assignee(userService.toDTO(ticket.getAssignee()))
+      .sectionId(ticket.getSection().getId())
+      .orderIndex(ticket.getOrderIndex())
+      .build();
   }
 
   private TicketListingDTO toListingDTO(Ticket ticket) {
-    TicketListingDTO dto = new TicketListingDTO();
-    dto.setId(ticket.getId());
-    dto.setTitle(ticket.getTitle());
-    dto.setStatus(ticket.getStatus());
-    dto.setPriority(ticket.getPriority());
-    dto.setAssignee(userService.toDTO(ticket.getAssignee()));
-    dto.setDueDate(ticket.getDueDate());
-    dto.setProject(
-      projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
-    );
-    return dto;
+    return TicketListingDTO.builder()
+      .id(ticket.getId())
+      .title(ticket.getTitle())
+      .status(ticket.getStatus())
+      .priority(ticket.getPriority())
+      .assignee(userService.toDTO(ticket.getAssignee()))
+      .dueDate(ticket.getDueDate())
+      .project(
+        projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
+      )
+      .build();
   }
 
   private Specification<Ticket> buildSpecification(

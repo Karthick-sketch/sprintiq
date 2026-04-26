@@ -51,7 +51,7 @@ public class ProjectsController {
   }
 
   @PostMapping("/{projectId}/sections")
-  public SectionCreateDTO createSection(
+  public SectionDTO createSection(
     @PathVariable Long projectId,
     @RequestBody SectionCreateDTO sectionCreateDTO
   ) {
@@ -59,7 +59,7 @@ public class ProjectsController {
   }
 
   @GetMapping("/{projectId}/sections")
-  public List<SectionDTO> getSections(@PathVariable Long projectId) {
+  public List<SectionDTO> getSections(@PathVariable long projectId) {
     return projectsService.getSections(projectId);
   }
 

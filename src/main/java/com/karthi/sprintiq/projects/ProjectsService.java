@@ -15,10 +15,15 @@ import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.user.UserService;
 import com.karthi.sprintiq.user.entity.User;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProjectsService {
@@ -58,8 +63,7 @@ public class ProjectsService {
   }
 
   public ProjectDTO getProjectByIdToDTO(Long id) {
-    Project project = getProjectById(id);
-    return toProjectDTO(project);
+    return toProjectDTO(getProjectById(id));
   }
 
   public void updateProject(Long id, ProjectDTO request) {
@@ -83,46 +87,49 @@ public class ProjectsService {
   }
 
   private ProjectDTO toProjectDTO(Project project) {
-    ProjectDTO dto = new ProjectDTO();
-    dto.setId(project.getId());
-    dto.setName(project.getName());
-    dto.setDescription(project.getDescription());
-    dto.setOwnerId(project.getOwner().getId());
-    dto.setTeamMemberIds(
-      project
-        .getTeamMembers()
-        .stream()
-        .map(projectUser -> projectUser.getUser().getId())
-        .toList()
-    );
-    return dto;
+    return ProjectDTO.builder()
+      .id(project.getId())
+      .name(project.getName())
+      .description(project.getDescription())
+      .ownerId(project.getOwner().getId())
+      .teamMemberIds(
+        project
+          .getTeamMembers()
+          .stream()
+          .map(projectUser -> projectUser.getUser().getId())
+          .toList()
+      )
+      .build();
   }
 
   private ProjectUser toProjectUser(Project project, User user) {
-    ProjectUser projectUser = new ProjectUser();
-    projectUser.setProject(project);
-    projectUser.setUser(user);
-    return projectUser;
+    return ProjectUser.builder().project(project).user(user).build();
   }
 
   // -------- Project Sections ------------------------------------------------
-  public SectionCreateDTO createSection(
+  public SectionDTO createSection(
     Long projectId,
     SectionCreateDTO sectionCreateDTO
   ) {
     Section section = new Section();
     section.setName(sectionCreateDTO.getName());
     section.setProject(getProjectById(projectId));
-    sectionRepository.save(section);
-    return sectionCreateDTO;
+    section.setOrderIndex(sectionCreateDTO.getOrderIndex());
+    return toSectionDTO(sectionRepository.save(section));
   }
 
-  public List<SectionDTO> getSections(Long projectId) {
-    return sectionRepository
-      .findByProjectId(projectId)
-      .stream()
-      .map(this::toSectionDTO)
-      .toList();
+  public List<SectionDTO> getSections(long projectId) {
+    try {
+      return sectionRepository
+        .findByProjectId(projectId)
+        .stream()
+        .sorted(Comparator.comparing(Section::getOrderIndex))
+        .map(this::toSectionDTO)
+        .toList();
+    } catch (Exception e) {
+      log.error("Error fetching sections for project {}", projectId, e);
+      return Collections.emptyList();
+    }
   }
 
   public Section getSectionById(Long sectionId) {
@@ -148,47 +155,55 @@ public class ProjectsService {
   }
 
   private SectionDTO toSectionDTO(Section section) {
-    SectionDTO dto = new SectionDTO();
-    dto.setId(section.getId());
-    dto.setName(section.getName());
-    dto.setTickets(
-      section
-        .getTickets()
-        .stream()
-        .map(this::toProjectSectionTicketDTO)
-        .toList()
-    );
-    return dto;
+    return SectionDTO.builder()
+      .id(section.getId())
+      .name(section.getName())
+      .tickets(
+        Optional.ofNullable(section.getTickets())
+          .map(tickets ->
+            tickets
+              .stream()
+              .sorted(Comparator.comparing(Ticket::getOrderIndex))
+              .map(this::toProjectSectionTicketDTO)
+              .toList()
+          )
+          .orElse(Collections.emptyList())
+      )
+      .orderIndex(section.getOrderIndex())
+      .build();
   }
 
   private ProjectSectionTicketDTO toProjectSectionTicketDTO(Ticket ticket) {
-    ProjectSectionTicketDTO dto = new ProjectSectionTicketDTO();
-    dto.setId(ticket.getId());
-    dto.setTitle(ticket.getTitle());
-    dto.setStatus(ticket.getStatus());
-    dto.setPriority(ticket.getPriority());
-    dto.setAssigneeId(ticket.getAssignee().getId());
-    dto.setSectionId(ticket.getSection().getId());
-    return dto;
+    return ProjectSectionTicketDTO.builder()
+      .id(ticket.getId())
+      .title(ticket.getTitle())
+      .status(ticket.getStatus())
+      .priority(ticket.getPriority())
+      .assignee(userService.toDTO(ticket.getAssignee()))
+      .dueDate(ticket.getDueDate())
+      .sectionId(ticket.getSection().getId())
+      .orderIndex(ticket.getOrderIndex())
+      .build();
   }
 
   private Ticket toTicket(TicketDTO dto) {
-    Ticket ticket = new Ticket();
-    ticket.setId(dto.getId());
-    ticket.setTitle(dto.getTitle());
-    ticket.setDescription(dto.getDescription());
-    ticket.setStatus(dto.getStatus());
-    ticket.setPriority(dto.getPriority());
-    ticket.setDueDate(dto.getDueDate());
-    ticket.setAssignee(userService.getUserById(dto.getAssigneeId()));
-    ticket.setSection(getSectionById(dto.getSectionId()));
-    return ticket;
+    return Ticket.builder()
+      .id(dto.getId())
+      .title(dto.getTitle())
+      .description(dto.getDescription())
+      .status(dto.getStatus())
+      .priority(dto.getPriority())
+      .dueDate(dto.getDueDate())
+      .assignee(userService.getUserById(dto.getAssignee().getId()))
+      .section(getSectionById(dto.getSectionId()))
+      .orderIndex(dto.getOrderIndex())
+      .build();
   }
 
   public ProjectTicketListDTO toProjectTicketListDTO(Project project) {
-    ProjectTicketListDTO dto = new ProjectTicketListDTO();
-    dto.setId(project.getId());
-    dto.setName(project.getName());
-    return dto;
+    return ProjectTicketListDTO.builder()
+      .id(project.getId())
+      .name(project.getName())
+      .build();
   }
 }
