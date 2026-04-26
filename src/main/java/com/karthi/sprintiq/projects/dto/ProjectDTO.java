@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ProjectDTO {
 
   private Long id;
-  private String name;
+  private String title;
   private String description;
   private Long ownerId;
   private List<Long> teamMemberIds;

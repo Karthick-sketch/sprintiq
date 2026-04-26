@@ -28,7 +28,7 @@ public class Section {
   private Long id;
 
   @Column(nullable = false)
-  private String name;
+  private String title;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "project_id", nullable = false)

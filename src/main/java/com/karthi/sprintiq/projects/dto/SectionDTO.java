@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SectionDTO {
 
   private Long id;
-  private String name;
+  private String title;
   private Long projectId;
   private List<ProjectSectionTicketDTO> tickets;
   private Integer orderIndex;
