@@ -30,16 +30,7 @@ public class TicketsService {
   private final UserService userService;
 
   public TicketDTO createTicket(TicketRequestDTO request) {
-    Ticket ticket = new Ticket();
-    ticket.setTitle(request.getTitle());
-    ticket.setDescription(request.getDescription());
-    ticket.setStatus(request.getStatus());
-    ticket.setPriority(request.getPriority());
-    ticket.setDueDate(request.getDueDate());
-    ticket.setAssignee(userService.getUserById(request.getAssigneeId()));
-    ticket.setSection(projectsService.getSectionById(request.getSectionId()));
-    ticket.setOrderIndex(request.getOrderIndex());
-    return toDTO(ticketsRepository.save(ticket));
+    return toDTO(ticketsRepository.save(toTicket(request)));
   }
 
   public List<TicketListingDTO> getAllTickets(
@@ -70,8 +61,7 @@ public class TicketsService {
   }
 
   public TicketDTO getTicketByIdToDTO(Long id) {
-    Ticket ticket = getTicketById(id);
-    return toDTO(ticket);
+    return toDTO(getTicketById(id));
   }
 
   public void updateTicket(Long id, TicketDTO request) {
@@ -86,8 +76,7 @@ public class TicketsService {
   }
 
   public void deleteTicket(Long id) {
-    Ticket ticket = getTicketById(id);
-    ticketsRepository.delete(ticket);
+    ticketsRepository.delete(getTicketById(id));
   }
 
   @Transactional
@@ -112,30 +101,45 @@ public class TicketsService {
     ticketsRepository.saveAll(tickets);
   }
 
+  private Ticket toTicket(TicketRequestDTO request) {
+    return Ticket.builder()
+      .title(request.getTitle())
+      .description(request.getDescription())
+      .status(request.getStatus())
+      .priority(request.getPriority())
+      .dueDate(request.getDueDate())
+      .assignee(userService.getUserById(request.getAssigneeId()))
+      .section(projectsService.getSectionById(request.getSectionId()))
+      .orderIndex(request.getOrderIndex())
+      .build();
+  }
+
   private TicketDTO toDTO(Ticket ticket) {
-    TicketDTO dto = new TicketDTO();
-    dto.setId(ticket.getId());
-    dto.setTitle(ticket.getTitle());
-    dto.setDescription(ticket.getDescription());
-    dto.setStatus(ticket.getStatus());
-    dto.setPriority(ticket.getPriority());
-    dto.setAssignee(userService.toDTO(ticket.getAssignee()));
-    dto.setSectionId(ticket.getSection().getId());
-    return dto;
+    return TicketDTO.builder()
+      .id(ticket.getId())
+      .title(ticket.getTitle())
+      .description(ticket.getDescription())
+      .status(ticket.getStatus())
+      .priority(ticket.getPriority())
+      .dueDate(ticket.getDueDate())
+      .assignee(userService.toDTO(ticket.getAssignee()))
+      .sectionId(ticket.getSection().getId())
+      .orderIndex(ticket.getOrderIndex())
+      .build();
   }
 
   private TicketListingDTO toListingDTO(Ticket ticket) {
-    TicketListingDTO dto = new TicketListingDTO();
-    dto.setId(ticket.getId());
-    dto.setTitle(ticket.getTitle());
-    dto.setStatus(ticket.getStatus());
-    dto.setPriority(ticket.getPriority());
-    dto.setAssignee(userService.toDTO(ticket.getAssignee()));
-    dto.setDueDate(ticket.getDueDate());
-    dto.setProject(
-      projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
-    );
-    return dto;
+    return TicketListingDTO.builder()
+      .id(ticket.getId())
+      .title(ticket.getTitle())
+      .status(ticket.getStatus())
+      .priority(ticket.getPriority())
+      .assignee(userService.toDTO(ticket.getAssignee()))
+      .dueDate(ticket.getDueDate())
+      .project(
+        projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
+      )
+      .build();
   }
 
   private Specification<Ticket> buildSpecification(
