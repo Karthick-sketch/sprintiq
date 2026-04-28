@@ -133,6 +133,9 @@ public class ProjectsService {
   }
 
   public Section getSectionById(Long sectionId) {
+    if (sectionId == null) {
+      return null;
+    }
     return sectionRepository
       .findById(sectionId)
       .orElseThrow(() ->
@@ -182,7 +185,9 @@ public class ProjectsService {
       .priority(ticket.getPriority())
       .assignee(userService.toDTO(ticket.getAssignee()))
       .dueDate(ticket.getDueDate())
-      .sectionId(ticket.getSection().getId())
+      .sectionId(
+        ticket.getSection() != null ? ticket.getSection().getId() : null
+      )
       .orderIndex(ticket.getOrderIndex())
       .build();
   }
@@ -195,7 +200,11 @@ public class ProjectsService {
       .status(dto.getStatus())
       .priority(dto.getPriority())
       .dueDate(dto.getDueDate())
-      .assignee(userService.getUserById(dto.getAssignee().getId()))
+      .assignee(
+        dto.getAssignee() != null
+          ? userService.getUserById(dto.getAssignee().getId())
+          : null
+      )
       .section(getSectionById(dto.getSectionId()))
       .orderIndex(dto.getOrderIndex())
       .build();

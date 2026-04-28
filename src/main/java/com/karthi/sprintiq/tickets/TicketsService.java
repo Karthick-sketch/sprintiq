@@ -129,11 +129,7 @@ public class TicketsService {
       .status(ticket.getStatus())
       .priority(ticket.getPriority())
       .dueDate(ticket.getDueDate())
-      .assignee(
-        ticket.getAssignee() != null
-          ? userService.toDTO(ticket.getAssignee())
-          : null
-      )
+      .assignee(userService.toDTO(ticket.getAssignee()))
       .sectionId(
         ticket.getSection() != null ? ticket.getSection().getId() : null
       )
@@ -150,7 +146,11 @@ public class TicketsService {
       .assignee(userService.toDTO(ticket.getAssignee()))
       .dueDate(ticket.getDueDate())
       .project(
-        projectsService.toProjectTicketListDTO(ticket.getSection().getProject())
+        ticket.getSection() != null
+          ? projectsService.toProjectTicketListDTO(
+              ticket.getSection().getProject()
+            )
+          : null
       )
       .build();
   }
