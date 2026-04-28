@@ -38,11 +38,11 @@ public class Ticket {
 
   private Date dueDate;
 
-  @ManyToOne(optional = false)
+  @ManyToOne
   @JoinColumn(name = "assignee_id")
   private User assignee;
 
-  @ManyToOne(optional = false)
+  @ManyToOne
   @JoinColumn(name = "section_id")
   private Section section;
 

@@ -35,7 +35,7 @@ public class ProjectsService {
   // -------- Projects ------------------------------------------------------
   public ProjectDTO createProject(ProjectDTO request) {
     Project project = new Project();
-    project.setName(request.getName());
+    project.setTitle(request.getTitle());
     project.setDescription(request.getDescription());
     project.setOwner(userService.getUserById(request.getOwnerId()));
     project.setTeamMembers(
@@ -68,7 +68,7 @@ public class ProjectsService {
 
   public void updateProject(Long id, ProjectDTO request) {
     Project project = getProjectById(id);
-    project.setName(request.getName());
+    project.setTitle(request.getTitle());
     project.setDescription(request.getDescription());
     project.setOwner(userService.getUserById(request.getOwnerId()));
     project.setTeamMembers(
@@ -89,7 +89,7 @@ public class ProjectsService {
   private ProjectDTO toProjectDTO(Project project) {
     return ProjectDTO.builder()
       .id(project.getId())
-      .name(project.getName())
+      .title(project.getTitle())
       .description(project.getDescription())
       .ownerId(project.getOwner().getId())
       .teamMemberIds(
@@ -112,7 +112,7 @@ public class ProjectsService {
     SectionCreateDTO sectionCreateDTO
   ) {
     Section section = new Section();
-    section.setName(sectionCreateDTO.getName());
+    section.setTitle(sectionCreateDTO.getTitle());
     section.setProject(getProjectById(projectId));
     section.setOrderIndex(sectionCreateDTO.getOrderIndex());
     return toSectionDTO(sectionRepository.save(section));
@@ -133,6 +133,9 @@ public class ProjectsService {
   }
 
   public Section getSectionById(Long sectionId) {
+    if (sectionId == null) {
+      return null;
+    }
     return sectionRepository
       .findById(sectionId)
       .orElseThrow(() ->
@@ -157,7 +160,8 @@ public class ProjectsService {
   private SectionDTO toSectionDTO(Section section) {
     return SectionDTO.builder()
       .id(section.getId())
-      .name(section.getName())
+      .title(section.getTitle())
+      .projectId(section.getProject().getId())
       .tickets(
         Optional.ofNullable(section.getTickets())
           .map(tickets ->
@@ -181,7 +185,9 @@ public class ProjectsService {
       .priority(ticket.getPriority())
       .assignee(userService.toDTO(ticket.getAssignee()))
       .dueDate(ticket.getDueDate())
-      .sectionId(ticket.getSection().getId())
+      .sectionId(
+        ticket.getSection() != null ? ticket.getSection().getId() : null
+      )
       .orderIndex(ticket.getOrderIndex())
       .build();
   }
@@ -194,7 +200,11 @@ public class ProjectsService {
       .status(dto.getStatus())
       .priority(dto.getPriority())
       .dueDate(dto.getDueDate())
-      .assignee(userService.getUserById(dto.getAssignee().getId()))
+      .assignee(
+        dto.getAssignee() != null
+          ? userService.getUserById(dto.getAssignee().getId())
+          : null
+      )
       .section(getSectionById(dto.getSectionId()))
       .orderIndex(dto.getOrderIndex())
       .build();
@@ -203,7 +213,7 @@ public class ProjectsService {
   public ProjectTicketListDTO toProjectTicketListDTO(Project project) {
     return ProjectTicketListDTO.builder()
       .id(project.getId())
-      .name(project.getName())
+      .title(project.getTitle())
       .build();
   }
 }

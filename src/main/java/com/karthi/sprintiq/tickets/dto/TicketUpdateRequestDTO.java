@@ -6,7 +6,7 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class TicketRequestDTO {
+public class TicketUpdateRequestDTO {
 
   private String title;
   private String description;

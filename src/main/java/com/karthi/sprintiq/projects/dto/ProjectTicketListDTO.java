@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class ProjectTicketListDTO {
 
   private Long id;
-  private String name;
+  private String title;
 }

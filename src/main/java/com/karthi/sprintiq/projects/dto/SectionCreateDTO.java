@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class SectionCreateDTO {
 
-  private String name;
+  private String title;
   private Integer orderIndex;
 }
