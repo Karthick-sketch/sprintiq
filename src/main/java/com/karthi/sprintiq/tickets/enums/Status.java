@@ -1,6 +1,6 @@
 package com.karthi.sprintiq.tickets.enums;
 
-public enum TicketStatus {
+public enum Status {
   TODO,
   IN_PROGRESS,
   DONE,

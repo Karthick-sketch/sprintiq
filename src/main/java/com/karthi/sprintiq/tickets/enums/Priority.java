@@ -1,6 +1,6 @@
 package com.karthi.sprintiq.tickets.enums;
 
-public enum TicketPriority {
+public enum Priority {
   LOW,
   MEDIUM,
   HIGH,

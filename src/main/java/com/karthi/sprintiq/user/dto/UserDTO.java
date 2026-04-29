@@ -1,10 +1,12 @@
 package com.karthi.sprintiq.user.dto;
 
 import com.karthi.sprintiq.user.enums.Role;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserDTO {
 

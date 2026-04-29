@@ -9,8 +9,8 @@ import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
 import com.karthi.sprintiq.tickets.dto.TicketUpdateRequestDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
-import com.karthi.sprintiq.tickets.enums.TicketPriority;
-import com.karthi.sprintiq.tickets.enums.TicketStatus;
+import com.karthi.sprintiq.tickets.enums.Priority;
+import com.karthi.sprintiq.tickets.enums.Status;
 import com.karthi.sprintiq.tickets.repository.TicketsRepository;
 import com.karthi.sprintiq.tickets.specification.TicketSpecification;
 import com.karthi.sprintiq.user.UserService;
@@ -36,8 +36,8 @@ public class TicketsService {
 
   public List<TicketListingDTO> getAllTickets(
     String search,
-    TicketStatus status,
-    TicketPriority priority,
+    Status status,
+    Priority priority,
     Long assigneeId,
     Long projectId
   ) {
@@ -157,8 +157,8 @@ public class TicketsService {
 
   private Specification<Ticket> buildSpecification(
     String search,
-    TicketStatus status,
-    TicketPriority priority,
+    Status status,
+    Priority priority,
     Long assigneeId,
     Long projectId
   ) {
