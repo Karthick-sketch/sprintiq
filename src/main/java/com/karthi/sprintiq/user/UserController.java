@@ -23,6 +23,11 @@ public class UserController {
     return ResponseEntity.ok(userService.getAllUsers());
   }
 
+  @PostMapping
+  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
+    return ResponseEntity.ok(userService.createUser(dto));
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<UserDTO> updateUser(
     @PathVariable Long id,

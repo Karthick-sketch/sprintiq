@@ -27,7 +27,7 @@ public class UserService {
 
   public UserDTO getUserByEmail(String email) {
     User user = userRepository
-      .findByEmail(email)
+      .findByEmail(email.toLowerCase())
       .orElseThrow(() ->
         new UserNotFoundException("User not found with email: " + email)
       );
@@ -38,19 +38,29 @@ public class UserService {
     return userRepository.findAll().stream().map(this::toDTO).toList();
   }
 
+  public UserDTO createUser(UserDTO dto) {
+    User user = User.builder()
+      .name(dto.getName())
+      .email(dto.getEmail().toLowerCase())
+      .role(dto.getRole())
+      .status(dto.getStatus())
+      .build();
+    return toDTO(userRepository.save(user));
+  }
+
   public UserDTO updateUser(Long id, UserDTO dto) {
     User user = getUserById(id);
     if (dto.getName() != null && !dto.getName().isBlank()) {
       user.setName(dto.getName());
     }
     if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
-      user.setEmail(dto.getEmail());
+      user.setEmail(dto.getEmail().toLowerCase());
     }
     if (dto.getRole() != null) {
       user.setRole(dto.getRole());
     }
-    if (dto.getActive() != null) {
-      user.setActive(dto.getActive());
+    if (dto.getStatus() != null) {
+      user.setStatus(dto.getStatus());
     }
     return toDTO(userRepository.save(user));
   }
@@ -71,7 +81,7 @@ public class UserService {
       .name(user.getName())
       .email(user.getEmail())
       .role(user.getRole())
-      .active(user.getActive())
+      .status(user.getStatus())
       .build();
   }
 }

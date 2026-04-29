@@ -1,8 +1,8 @@
 package com.karthi.sprintiq.tickets.entity;
 
 import com.karthi.sprintiq.projects.entity.Section;
-import com.karthi.sprintiq.tickets.enums.Priority;
-import com.karthi.sprintiq.tickets.enums.Status;
+import com.karthi.sprintiq.tickets.enums.TicketPriority;
+import com.karthi.sprintiq.tickets.enums.TicketStatus;
 import com.karthi.sprintiq.user.entity.User;
 import jakarta.persistence.*;
 import java.sql.Date;
@@ -30,11 +30,11 @@ public class Ticket {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Status status;
+  private TicketStatus status;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Priority priority;
+  private TicketPriority priority;
 
   private Date dueDate;
 

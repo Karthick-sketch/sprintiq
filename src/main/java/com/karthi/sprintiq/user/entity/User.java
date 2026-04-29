@@ -3,6 +3,7 @@ package com.karthi.sprintiq.user.entity;
 import com.karthi.sprintiq.projects.entity.Project;
 import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.user.enums.Role;
+import com.karthi.sprintiq.user.enums.UserStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,15 +29,15 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
-  @Column(nullable = false)
   private String password;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Role role;
 
-  @Builder.Default
-  private Boolean active = true;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private UserStatus status;
 
   @CreationTimestamp
   @Column(updatable = false)
