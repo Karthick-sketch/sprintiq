@@ -75,6 +75,7 @@ public class UserService {
       .name(user.getName())
       .email(user.getEmail())
       .role(user.getRole())
+      .active(user.getActive())
       .build();
   }
 }
