@@ -1,7 +1,6 @@
 package com.karthi.sprintiq.user;
 
 import com.karthi.sprintiq.user.dto.UserDTO;
-import com.karthi.sprintiq.user.dto.UserRequestDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,7 @@ public class UserController {
   @PutMapping("/{id}")
   public ResponseEntity<UserDTO> updateUser(
     @PathVariable Long id,
-    @RequestBody UserRequestDTO dto
+    @RequestBody UserDTO dto
   ) {
     return ResponseEntity.ok(userService.updateUser(id, dto));
   }

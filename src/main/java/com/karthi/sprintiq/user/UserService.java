@@ -2,12 +2,10 @@ package com.karthi.sprintiq.user;
 
 import com.karthi.sprintiq.exception.UserNotFoundException;
 import com.karthi.sprintiq.user.dto.UserDTO;
-import com.karthi.sprintiq.user.dto.UserRequestDTO;
 import com.karthi.sprintiq.user.entity.User;
 import com.karthi.sprintiq.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
 
   public User getUserById(Long id) {
     return userRepository
@@ -41,22 +38,21 @@ public class UserService {
     return userRepository.findAll().stream().map(this::toDTO).toList();
   }
 
-  public UserDTO updateUser(Long id, UserRequestDTO dto) {
-    User user = userRepository
-      .findById(id)
-      .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-
-    user.setName(dto.getName());
-    user.setEmail(dto.getEmail());
-    if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-      user.setPassword(passwordEncoder.encode(dto.getPassword()));
+  public UserDTO updateUser(Long id, UserDTO dto) {
+    User user = getUserById(id);
+    if (dto.getName() != null && !dto.getName().isBlank()) {
+      user.setName(dto.getName());
+    }
+    if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+      user.setEmail(dto.getEmail());
     }
     if (dto.getRole() != null) {
       user.setRole(dto.getRole());
     }
-
-    User updated = userRepository.save(user);
-    return toDTO(updated);
+    if (dto.getActive() != null) {
+      user.setActive(dto.getActive());
+    }
+    return toDTO(userRepository.save(user));
   }
 
   public void deleteUser(Long id) {
