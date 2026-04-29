@@ -1,8 +1,8 @@
 package com.karthi.sprintiq.tickets.specification;
 
 import com.karthi.sprintiq.tickets.entity.Ticket;
-import com.karthi.sprintiq.tickets.enums.Priority;
-import com.karthi.sprintiq.tickets.enums.Status;
+import com.karthi.sprintiq.tickets.enums.TicketPriority;
+import com.karthi.sprintiq.tickets.enums.TicketStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class TicketSpecification {
@@ -16,7 +16,7 @@ public class TicketSpecification {
     };
   }
 
-  public static Specification<Ticket> hasStatus(Status status) {
+  public static Specification<Ticket> hasStatus(TicketStatus status) {
     return (root, query, criteriaBuilder) -> {
       if (status == null) {
         return criteriaBuilder.conjunction();
@@ -25,7 +25,7 @@ public class TicketSpecification {
     };
   }
 
-  public static Specification<Ticket> hasPriority(Priority priority) {
+  public static Specification<Ticket> hasPriority(TicketPriority priority) {
     return (root, query, criteriaBuilder) -> {
       if (priority == null) {
         return criteriaBuilder.conjunction();

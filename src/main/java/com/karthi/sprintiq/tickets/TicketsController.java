@@ -5,8 +5,8 @@ import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
 import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
 import com.karthi.sprintiq.tickets.dto.TicketUpdateRequestDTO;
-import com.karthi.sprintiq.tickets.enums.Priority;
-import com.karthi.sprintiq.tickets.enums.Status;
+import com.karthi.sprintiq.tickets.enums.TicketPriority;
+import com.karthi.sprintiq.tickets.enums.TicketStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +34,8 @@ public class TicketsController {
   @GetMapping
   public List<TicketListingDTO> getAllTickets(
     @RequestParam(required = false) String search,
-    @RequestParam(required = false) Status status,
-    @RequestParam(required = false) Priority priority,
+    @RequestParam(required = false) TicketStatus status,
+    @RequestParam(required = false) TicketPriority priority,
     @RequestParam(required = false) Long assigneeId,
     @RequestParam(required = false) Long projectId
   ) {

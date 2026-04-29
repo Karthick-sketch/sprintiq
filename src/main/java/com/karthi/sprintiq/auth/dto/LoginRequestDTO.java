@@ -1,11 +1,8 @@
 package com.karthi.sprintiq.auth.dto;
 
-import lombok.*;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class LoginRequestDTO {
 
   private String email;
