@@ -22,6 +22,7 @@ public class TicketDTO {
   private TicketPriority priority;
   private Date dueDate;
   private UserDTO assignee;
+  private UserDTO reporter;
   private Long sectionId;
   private Integer orderIndex;
 }

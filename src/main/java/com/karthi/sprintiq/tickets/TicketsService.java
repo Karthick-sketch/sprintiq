@@ -116,6 +116,7 @@ public class TicketsService {
       .priority(request.getPriority())
       .dueDate(request.getDueDate())
       .assignee(userService.getUserById(request.getAssigneeId()))
+      .reporter(userService.getUserById(request.getReporterId()))
       .section(projectsService.getSectionById(request.getSectionId()))
       .orderIndex(request.getOrderIndex())
       .build();
@@ -130,6 +131,7 @@ public class TicketsService {
       .priority(ticket.getPriority())
       .dueDate(ticket.getDueDate())
       .assignee(userService.toDTO(ticket.getAssignee()))
+      .reporter(userService.toDTO(ticket.getReporter()))
       .sectionId(
         ticket.getSection() != null ? ticket.getSection().getId() : null
       )
@@ -144,6 +146,7 @@ public class TicketsService {
       .status(ticket.getStatus())
       .priority(ticket.getPriority())
       .assignee(userService.toDTO(ticket.getAssignee()))
+      .reporter(userService.toDTO(ticket.getReporter()))
       .dueDate(ticket.getDueDate())
       .project(
         ticket.getSection() != null

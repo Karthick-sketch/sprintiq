@@ -43,6 +43,10 @@ public class Ticket {
   private User assignee;
 
   @ManyToOne
+  @JoinColumn(name = "reporter_id")
+  private User reporter;
+
+  @ManyToOne
   @JoinColumn(name = "section_id")
   private Section section;
 

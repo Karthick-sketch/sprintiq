@@ -20,7 +20,8 @@ public class TicketListingDTO {
   private String title;
   private TicketStatus status;
   private TicketPriority priority;
-  private UserDTO assignee;
   private Date dueDate;
+  private UserDTO assignee;
+  private UserDTO reporter;
   private ProjectTicketListDTO project;
 }

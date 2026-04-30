@@ -47,5 +47,8 @@ public class User {
   private List<Project> projects;
 
   @OneToMany(mappedBy = "assignee")
-  private List<Ticket> tickets;
+  private List<Ticket> assignedTickets;
+
+  @OneToMany(mappedBy = "reporter")
+  private List<Ticket> reportedTickets;
 }

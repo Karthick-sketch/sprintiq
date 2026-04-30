@@ -14,6 +14,7 @@ public class TicketCreateRequestDTO {
   private TicketPriority priority;
   private Date dueDate;
   private Long assigneeId;
+  private Long reporterId;
   private Long sectionId;
   private Integer orderIndex;
 }
