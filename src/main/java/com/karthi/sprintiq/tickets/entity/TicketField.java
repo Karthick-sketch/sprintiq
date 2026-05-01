@@ -1,16 +1,8 @@
 package com.karthi.sprintiq.tickets.entity;
 
 import com.karthi.sprintiq.fields.entity.Field;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "ticket_fields")
@@ -25,10 +17,13 @@ public class TicketField {
   private Long id;
 
   @ManyToOne
+  @JoinColumn(name = "ticket_id", nullable = false)
   private Ticket ticket;
 
   @ManyToOne
+  @JoinColumn(name = "field_id", nullable = false)
   private Field field;
 
+  @Column(nullable = false)
   private String value;
 }

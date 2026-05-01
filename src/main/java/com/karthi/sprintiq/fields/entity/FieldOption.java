@@ -16,7 +16,7 @@ public class FieldOption {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   @JoinColumn(name = "field_id", nullable = false)
   private Field field;
 
