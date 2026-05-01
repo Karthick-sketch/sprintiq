@@ -165,6 +165,41 @@ CREATE TABLE field_options (
 -- ==================================================
 
 -- Standard Fields
+-- Status and Priority with default values
+INSERT INTO
+    fields (
+        key,
+        name,
+        description,
+        kind,
+        type,
+        enabled,
+        required,
+        default_value
+    )
+VALUES (
+        'status',
+        'Status',
+        'Ticket status',
+        'STANDARD',
+        'DROPDOWN',
+        true,
+        true,
+        'Open'
+    ),
+    (
+        'priority',
+        'Priority',
+        'Ticket priority',
+        'STANDARD',
+        'DROPDOWN',
+        true,
+        false,
+        'Medium'
+    );
+
+-- Standard Fields
+-- Assignee, Reporter and Due Date without default values
 INSERT INTO
     fields (
         key,
@@ -176,24 +211,6 @@ INSERT INTO
         required
     )
 VALUES (
-        'status',
-        'Status',
-        'Ticket status',
-        'STANDARD',
-        'DROPDOWN',
-        true,
-        true
-    ),
-    (
-        'priority',
-        'Priority',
-        'Ticket priority',
-        'STANDARD',
-        'DROPDOWN',
-        true,
-        false
-    ),
-    (
         'assignee',
         'Assignee',
         'Assigned user',
@@ -243,7 +260,7 @@ VALUES (1, 1, true, true, 1), -- Status
 -- Status Options
 INSERT INTO
     field_options (field_id, value, order_index)
-VALUES (1, 'To Do', 1),
+VALUES (1, 'Open', 1),
     (1, 'In Progress', 2),
     (1, 'Done', 3);
 
