@@ -1,13 +1,13 @@
-package com.karthi.sprintiq.customfields.dto;
+package com.karthi.sprintiq.fields.dto;
 
-import com.karthi.sprintiq.customfields.enums.FieldKind;
-import com.karthi.sprintiq.customfields.enums.FieldType;
+import com.karthi.sprintiq.fields.enums.FieldKind;
+import com.karthi.sprintiq.fields.enums.FieldType;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class CustomFieldDTO {
+public class FieldDTO {
 
   private Long id;
   private String key;

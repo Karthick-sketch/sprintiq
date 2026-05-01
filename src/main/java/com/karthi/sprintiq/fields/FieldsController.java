@@ -1,6 +1,6 @@
-package com.karthi.sprintiq.customfields;
+package com.karthi.sprintiq.fields;
 
-import com.karthi.sprintiq.customfields.dto.CustomFieldDTO;
+import com.karthi.sprintiq.fields.dto.FieldDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/fields")
 @RequiredArgsConstructor
-public class CustomFieldsController {
+public class FieldsController {
 
-  private final CustomFieldsService customFieldsService;
+  private final FieldsService fieldsService;
 
   @GetMapping
-  public List<CustomFieldDTO> getAllFields() {
-    return customFieldsService.getAllFields();
+  public List<FieldDTO> getAllFields() {
+    return fieldsService.getAllFields();
   }
 }

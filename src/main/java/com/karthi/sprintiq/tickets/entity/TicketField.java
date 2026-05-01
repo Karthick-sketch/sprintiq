@@ -1,6 +1,6 @@
 package com.karthi.sprintiq.tickets.entity;
 
-import com.karthi.sprintiq.customfields.entity.CustomField;
+import com.karthi.sprintiq.fields.entity.Field;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,12 +13,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ticket_custom_fields")
+@Table(name = "ticket_fields")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TicketCustomField {
+public class TicketField {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class TicketCustomField {
   private Ticket ticket;
 
   @ManyToOne
-  private CustomField customField;
+  private Field field;
 
   private String value;
 }

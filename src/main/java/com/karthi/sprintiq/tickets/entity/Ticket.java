@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.tickets.entity;
 
+import com.karthi.sprintiq.projects.entity.Project;
 import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.tickets.enums.TicketPriority;
 import com.karthi.sprintiq.tickets.enums.TicketStatus;
@@ -45,6 +46,10 @@ public class Ticket {
   @ManyToOne
   @JoinColumn(name = "reporter_id")
   private User reporter;
+
+  @ManyToOne
+  @JoinColumn(name = "project_id", nullable = false)
+  private Project project;
 
   @ManyToOne
   @JoinColumn(name = "section_id")

@@ -1,7 +1,7 @@
-package com.karthi.sprintiq.customfields.entity;
+package com.karthi.sprintiq.fields.entity;
 
-import com.karthi.sprintiq.customfields.enums.FieldKind;
-import com.karthi.sprintiq.customfields.enums.FieldType;
+import com.karthi.sprintiq.fields.enums.FieldKind;
+import com.karthi.sprintiq.fields.enums.FieldType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomField {
+public class Field {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

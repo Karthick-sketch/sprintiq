@@ -1,4 +1,4 @@
-package com.karthi.sprintiq.customfields.enums;
+package com.karthi.sprintiq.fields.enums;
 
 public enum FieldType {
   TEXT,

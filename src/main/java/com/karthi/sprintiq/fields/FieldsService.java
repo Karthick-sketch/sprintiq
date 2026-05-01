@@ -1,24 +1,24 @@
-package com.karthi.sprintiq.customfields;
+package com.karthi.sprintiq.fields;
 
-import com.karthi.sprintiq.customfields.dto.CustomFieldDTO;
-import com.karthi.sprintiq.customfields.entity.CustomField;
-import com.karthi.sprintiq.customfields.repository.CustomFieldRepository;
+import com.karthi.sprintiq.fields.dto.FieldDTO;
+import com.karthi.sprintiq.fields.entity.Field;
+import com.karthi.sprintiq.fields.repository.FieldRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomFieldsService {
+public class FieldsService {
 
-  private final CustomFieldRepository fieldRepository;
+  private final FieldRepository fieldRepository;
 
-  public List<CustomFieldDTO> getAllFields() {
+  public List<FieldDTO> getAllFields() {
     return fieldRepository.findAll().stream().map(this::toDto).toList();
   }
 
-  private CustomFieldDTO toDto(CustomField field) {
-    return CustomFieldDTO.builder()
+  private FieldDTO toDto(Field field) {
+    return FieldDTO.builder()
       .id(field.getId())
       .key(field.getKey())
       .name(field.getName())
