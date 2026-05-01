@@ -181,10 +181,7 @@ public class ProjectsService {
     return ProjectSectionTicketDTO.builder()
       .id(ticket.getId())
       .title(ticket.getTitle())
-      .status(ticket.getStatus())
-      .priority(ticket.getPriority())
-      .assignee(userService.toDTO(ticket.getAssignee()))
-      .dueDate(ticket.getDueDate())
+      .projectId(ticket.getProject().getId())
       .sectionId(
         ticket.getSection() != null ? ticket.getSection().getId() : null
       )
@@ -197,14 +194,7 @@ public class ProjectsService {
       .id(dto.getId())
       .title(dto.getTitle())
       .description(dto.getDescription())
-      .status(dto.getStatus())
-      .priority(dto.getPriority())
-      .dueDate(dto.getDueDate())
-      .assignee(
-        dto.getAssignee() != null
-          ? userService.getUserById(dto.getAssignee().getId())
-          : null
-      )
+      .project(getProjectById(dto.getProjectId()))
       .section(getSectionById(dto.getSectionId()))
       .orderIndex(dto.getOrderIndex())
       .build();
