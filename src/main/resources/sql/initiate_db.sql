@@ -125,9 +125,9 @@ CREATE TABLE tickets (
 -- Ticket Fields
 CREATE TABLE ticket_fields (
     id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    "value" varchar(255),
-    field_id bigint,
-    ticket_id bigint,
+    "value" varchar(255) NOT NULL,
+    field_id bigint NOT NULL,
+    ticket_id bigint NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_ticket_fields_field_id FOREIGN key (field_id) REFERENCES fields (id),
     CONSTRAINT fk_ticket_fields_ticket_id FOREIGN key (ticket_id) REFERENCES tickets (id)

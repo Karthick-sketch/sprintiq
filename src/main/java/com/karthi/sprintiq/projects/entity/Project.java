@@ -1,15 +1,8 @@
 package com.karthi.sprintiq.projects.entity;
 
+import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.user.entity.User;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,4 +32,7 @@ public class Project {
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   private List<Section> sections;
+
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+  private List<Ticket> tickets;
 }

@@ -2,18 +2,10 @@ package com.karthi.sprintiq.fields.entity;
 
 import com.karthi.sprintiq.fields.enums.FieldKind;
 import com.karthi.sprintiq.fields.enums.FieldType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.karthi.sprintiq.tickets.entity.TicketField;
+import jakarta.persistence.*;
+import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "fields")
@@ -43,7 +35,21 @@ public class Field {
   @Column(nullable = false)
   private FieldType type;
 
+  @Column(nullable = false)
   private Boolean enabled;
+
+  @Column(nullable = false)
   private Boolean required;
+
+  @Column(name = "default_value")
   private String defaultValue;
+
+  @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
+  private List<FieldOption> options;
+
+  @OneToOne(mappedBy = "field", cascade = CascadeType.ALL)
+  private FieldTemplateItem templateItem;
+
+  @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
+  private List<TicketField> ticketFields;
 }

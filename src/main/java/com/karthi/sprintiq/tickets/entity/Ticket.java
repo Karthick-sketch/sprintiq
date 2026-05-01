@@ -3,6 +3,7 @@ package com.karthi.sprintiq.tickets.entity;
 import com.karthi.sprintiq.projects.entity.Project;
 import com.karthi.sprintiq.projects.entity.Section;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,4 +36,7 @@ public class Ticket {
 
   @Column(name = "order_index", nullable = false)
   private Integer orderIndex;
+
+  @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+  private List<TicketField> ticketFields;
 }
