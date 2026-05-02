@@ -217,6 +217,49 @@ VALUES
     -- Ticket Custom Fields (6: Customer Name, 7: Reviewer, 8: GitHub Link)
     ('Acme Corp', 6, 1),
     ('3', 7, 2),
-    ('http://github.com/example/repo', 8, 3),
+    (
+        'http://github.com/example/repo',
+        8,
+        3
+    ),
     ('2', 7, 4),
     ('Initech', 6, 5);
+
+-- Ticket Comments
+INSERT INTO
+    ticket_comments (
+        content,
+        created_at,
+        ticket_id,
+        created_by
+    )
+VALUES (
+        'Can you please provide more details on this bug?',
+        CURRENT_TIMESTAMP,
+        1,
+        1
+    ),
+    (
+        'I have started working on this feature.',
+        CURRENT_TIMESTAMP,
+        2,
+        2
+    ),
+    (
+        'The documentation has been successfully updated.',
+        CURRENT_TIMESTAMP,
+        3,
+        3
+    ),
+    (
+        'Applying the security patch right now. Expect downtime.',
+        CURRENT_TIMESTAMP,
+        4,
+        1
+    ),
+    (
+        'Code refactored and tests are passing.',
+        CURRENT_TIMESTAMP,
+        5,
+        2
+    );

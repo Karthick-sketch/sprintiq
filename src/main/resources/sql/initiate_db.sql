@@ -135,29 +135,44 @@ CREATE TABLE ticket_fields (
 
 -- Field Templates
 CREATE TABLE field_templates (
-    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- Field Template Items
 CREATE TABLE field_template_items (
-    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
     template_id BIGINT NOT NULL,
     field_id BIGINT NOT NULL,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     required BOOLEAN NOT NULL DEFAULT FALSE,
     order_index INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
     CONSTRAINT fk_template FOREIGN KEY (template_id) REFERENCES field_templates (id),
     CONSTRAINT fk_field FOREIGN KEY (field_id) REFERENCES fields (id)
 );
 
 -- Field Options
 CREATE TABLE field_options (
-    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
     field_id BIGINT NOT NULL,
     value VARCHAR(255) NOT NULL,
     order_index INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
     CONSTRAINT fk_option_field FOREIGN KEY (field_id) REFERENCES fields (id)
+);
+
+-- Ticket Comments
+CREATE TABLE ticket_comments (
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    content varchar(255) NOT NULL,
+    created_at timestamp NOT NULL,
+    ticket_id bigint NOT NULL,
+    created_by bigint NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_ticket_comments_ticket_id FOREIGN KEY (ticket_id) REFERENCES tickets (id),
+    CONSTRAINT fk_ticket_comments_created_by FOREIGN KEY (created_by) REFERENCES users (id)
 );
 
 -- ==================================================

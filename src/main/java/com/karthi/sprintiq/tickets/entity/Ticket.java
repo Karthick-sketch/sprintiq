@@ -26,6 +26,9 @@ public class Ticket {
 
   private String description;
 
+  @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+  private List<TicketComment> comments;
+
   @ManyToOne
   @JoinColumn(name = "project_id", nullable = false)
   private Project project;
@@ -39,4 +42,11 @@ public class Ticket {
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
   private List<TicketField> ticketFields;
+
+  @ManyToOne
+  @JoinColumn(name = "parent_id")
+  private Ticket parent;
+
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+  private List<Ticket> subTickets;
 }
