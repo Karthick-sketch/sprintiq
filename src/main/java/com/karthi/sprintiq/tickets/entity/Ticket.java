@@ -41,7 +41,7 @@ public class Ticket {
   private Integer orderIndex;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-  private List<TicketField> ticketFields;
+  private List<TicketField> fields;
 
   @ManyToOne
   @JoinColumn(name = "parent_id")

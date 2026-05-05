@@ -116,10 +116,12 @@ CREATE TABLE tickets (
     description varchar(255),
     project_id bigint NOT NULL,
     section_id bigint,
+    parent_id bigint,
     order_index integer DEFAULT 0,
     PRIMARY KEY (id),
     CONSTRAINT fk_tickets_project_id FOREIGN key (project_id) REFERENCES projects (id),
-    CONSTRAINT fk_tickets_section_id FOREIGN key (section_id) REFERENCES sections (id)
+    CONSTRAINT fk_tickets_section_id FOREIGN key (section_id) REFERENCES sections (id),
+    CONSTRAINT fk_tickets_parent_id FOREIGN key (parent_id) REFERENCES tickets (id)
 );
 
 -- Ticket Fields

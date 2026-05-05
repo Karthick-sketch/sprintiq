@@ -1,10 +1,14 @@
 package com.karthi.sprintiq.tickets;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
+import com.karthi.sprintiq.fields.dto.FieldDTO;
+import com.karthi.sprintiq.fields.entity.Field;
 import com.karthi.sprintiq.projects.ProjectsService;
 import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.tickets.dto.*;
 import com.karthi.sprintiq.tickets.entity.Ticket;
+import com.karthi.sprintiq.tickets.entity.TicketComment;
+import com.karthi.sprintiq.tickets.entity.TicketField;
 import com.karthi.sprintiq.tickets.repository.TicketsRepository;
 import com.karthi.sprintiq.tickets.specification.TicketSpecification;
 import java.util.List;
@@ -110,9 +114,17 @@ public class TicketsService {
       .id(ticket.getId())
       .title(ticket.getTitle())
       .description(ticket.getDescription())
+      .comments(toCommentDTO(ticket.getComments()))
+      .ticketFields(toTicketFieldsDTO(ticket.getFields()))
       .projectId(ticket.getProject().getId())
       .sectionId(
         ticket.getSection() != null ? ticket.getSection().getId() : null
+      )
+      .parentId(ticket.getParent() != null ? ticket.getParent().getId() : null)
+      .subTicketIds(
+        ticket.getSubTickets() != null
+          ? ticket.getSubTickets().stream().map(Ticket::getId).toList()
+          : null
       )
       .orderIndex(ticket.getOrderIndex())
       .build();
@@ -129,6 +141,50 @@ public class TicketsService {
             )
           : null
       )
+      .build();
+  }
+
+  private List<TicketCommentDTO> toCommentDTO(
+    List<TicketComment> ticketComments
+  ) {
+    return ticketComments
+      .stream()
+      .map(ticketComment ->
+        TicketCommentDTO.builder()
+          .id(ticketComment.getId())
+          .content(ticketComment.getContent())
+          .createdAt(ticketComment.getCreatedAt())
+          .createdById(ticketComment.getCreatedBy().getId())
+          .build()
+      )
+      .toList();
+  }
+
+  private List<TicketFieldDTO> toTicketFieldsDTO(
+    List<TicketField> ticketFields
+  ) {
+    return ticketFields.stream().map(this::toTicketFieldDTO).toList();
+  }
+
+  private TicketFieldDTO toTicketFieldDTO(TicketField ticketField) {
+    return TicketFieldDTO.builder()
+      .id(ticketField.getId())
+      .field(toFieldDTO(ticketField.getField()))
+      .value(ticketField.getValue())
+      .build();
+  }
+
+  private FieldDTO toFieldDTO(Field field) {
+    return FieldDTO.builder()
+      .id(field.getId())
+      .key(field.getKey())
+      .name(field.getName())
+      .description(field.getDescription())
+      .kind(field.getKind())
+      .type(field.getType())
+      .enabled(field.getEnabled())
+      .required(field.getRequired())
+      .defaultValue(field.getDefaultValue())
       .build();
   }
 
