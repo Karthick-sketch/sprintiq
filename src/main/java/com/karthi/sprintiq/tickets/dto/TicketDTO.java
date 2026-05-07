@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.tickets.dto;
 
+import com.karthi.sprintiq.projects.dto.ProjectTitleDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class TicketDTO {
   private List<TicketFieldDTO> ticketFields;
   private List<Long> subTicketIds;
   private Long parentId;
-  private Long projectId;
+  private ProjectTitleDTO project;
   private Long sectionId;
   private Integer orderIndex;
 }

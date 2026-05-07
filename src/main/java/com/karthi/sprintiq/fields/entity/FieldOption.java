@@ -25,4 +25,7 @@ public class FieldOption {
 
   @Column(name = "order_index", nullable = false)
   private Integer orderIndex;
+
+  @Column(name = "color_number")
+  private Integer colorNumber;
 }

@@ -116,7 +116,7 @@ public class TicketsService {
       .description(ticket.getDescription())
       .comments(toCommentDTO(ticket.getComments()))
       .ticketFields(toTicketFieldsDTO(ticket.getFields()))
-      .projectId(ticket.getProject().getId())
+      .project(projectsService.toProjectTitleDTO(ticket.getProject()))
       .sectionId(
         ticket.getSection() != null ? ticket.getSection().getId() : null
       )
@@ -136,9 +136,7 @@ public class TicketsService {
       .title(ticket.getTitle())
       .project(
         ticket.getSection() != null
-          ? projectsService.toProjectTicketListDTO(
-              ticket.getSection().getProject()
-            )
+          ? projectsService.toProjectTitleDTO(ticket.getSection().getProject())
           : null
       )
       .build();

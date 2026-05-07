@@ -1,6 +1,6 @@
 package com.karthi.sprintiq.tickets.dto;
 
-import com.karthi.sprintiq.projects.dto.ProjectTicketListDTO;
+import com.karthi.sprintiq.projects.dto.ProjectTitleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +14,5 @@ public class TicketListingDTO {
 
   private Long id;
   private String title;
-  private ProjectTicketListDTO project;
+  private ProjectTitleDTO project;
 }

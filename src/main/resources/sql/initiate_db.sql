@@ -161,6 +161,7 @@ CREATE TABLE field_options (
     field_id BIGINT NOT NULL,
     value VARCHAR(255) NOT NULL,
     order_index INT NOT NULL DEFAULT 0,
+    color_number INT,
     PRIMARY KEY (id),
     CONSTRAINT fk_option_field FOREIGN KEY (field_id) REFERENCES fields (id)
 );
@@ -276,15 +277,25 @@ VALUES (1, 1, true, true, 1), -- Status
 
 -- Status Options
 INSERT INTO
-    field_options (field_id, value, order_index)
-VALUES (1, 'Open', 1),
-    (1, 'In Progress', 2),
-    (1, 'Done', 3);
+    field_options (
+        field_id,
+        value,
+        order_index,
+        color_number
+    )
+VALUES (1, 'Open', 1, 1),
+    (1, 'In Progress', 2, 2),
+    (1, 'Done', 3, 3);
 
 -- Priority Options
 INSERT INTO
-    field_options (field_id, value, order_index)
-VALUES (2, 'Low', 1),
-    (2, 'Medium', 2),
-    (2, 'High', 3),
-    (2, 'Urgent', 4);
+    field_options (
+        field_id,
+        value,
+        order_index,
+        color_number
+    )
+VALUES (2, 'Low', 1, 4),
+    (2, 'Medium', 2, 5),
+    (2, 'High', 3, 6),
+    (2, 'Urgent', 4, 7);

@@ -1,6 +1,7 @@
 package com.karthi.sprintiq.fields;
 
 import com.karthi.sprintiq.fields.dto.FieldDTO;
+import com.karthi.sprintiq.fields.dto.FieldOptionDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,5 +18,10 @@ public class FieldsController {
   @GetMapping
   public List<FieldDTO> getAllFields() {
     return fieldsService.getAllFields();
+  }
+
+  @GetMapping("/options")
+  public List<FieldOptionDTO> getFieldOptions() {
+    return fieldsService.getAllFieldOptions();
   }
 }
