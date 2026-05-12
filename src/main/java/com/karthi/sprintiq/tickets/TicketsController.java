@@ -1,5 +1,7 @@
 package com.karthi.sprintiq.tickets;
 
+import com.karthi.sprintiq.fields.TicketSearchService;
+import com.karthi.sprintiq.fields.dto.TicketSearchRequest;
 import com.karthi.sprintiq.tickets.dto.TicketCreateRequestDTO;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;
@@ -7,6 +9,7 @@ import com.karthi.sprintiq.tickets.dto.TicketOrderDTO;
 import com.karthi.sprintiq.tickets.dto.TicketUpdateRequestDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TicketsController {
 
   private final TicketsService ticketsService;
+  private final TicketSearchService ticketSearchService;
 
   @PostMapping
   public TicketDTO createTicket(@RequestBody TicketCreateRequestDTO request) {
@@ -70,5 +74,10 @@ public class TicketsController {
     @RequestBody List<TicketOrderDTO> tickets
   ) {
     ticketsService.reorderTickets(sectionId, tickets);
+  }
+
+  @PostMapping("/search")
+  public Page<TicketListingDTO> searchTickets(@RequestBody TicketSearchRequest request) {
+    return ticketSearchService.search(request);
   }
 }

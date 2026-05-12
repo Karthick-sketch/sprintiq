@@ -1,6 +1,5 @@
 package com.karthi.sprintiq.fields.dto;
 
-import com.karthi.sprintiq.fields.enums.FieldKind;
 import com.karthi.sprintiq.fields.enums.FieldType;
 import java.util.List;
 import lombok.*;
@@ -9,17 +8,18 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FieldDTO {
+public class ProjectFieldResponse {
 
-    private Long id;
+    private Long projectFieldId;
+    private Long fieldId;
     private String systemKey;
     private String name;
-    private String description;
-    private FieldKind fieldKind;
+    private String displayName;
+    private String helpText;
     private FieldType fieldType;
-    private boolean system;
-    private boolean locked;
-    private boolean searchable;
-    private boolean active;
+    private Integer sortOrder;
+    private boolean enabled;
+    private boolean required;
+    private boolean useGlobalOptions;
     private List<FieldOptionDTO> options;
 }

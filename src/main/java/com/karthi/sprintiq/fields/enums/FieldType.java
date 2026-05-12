@@ -2,12 +2,17 @@ package com.karthi.sprintiq.fields.enums;
 
 public enum FieldType {
   TEXT,
+  TEXTAREA,
   NUMBER,
-  BOOLEAN,
   DATE,
+  DATETIME,
   URL,
-  USER,
-  MULTI_USER,
   DROPDOWN,
   MULTI_DROPDOWN,
+  USER,
+  MULTI_USER,
+  CHECKBOX,
+  RADIO,
+  BOOLEAN,
 }
+

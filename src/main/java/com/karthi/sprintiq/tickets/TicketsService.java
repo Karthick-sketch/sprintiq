@@ -175,16 +175,18 @@ public class TicketsService {
   private FieldDTO toFieldDTO(Field field) {
     return FieldDTO.builder()
       .id(field.getId())
-      .key(field.getKey())
+      .systemKey(field.getSystemKey())
       .name(field.getName())
       .description(field.getDescription())
-      .kind(field.getKind())
-      .type(field.getType())
-      .enabled(field.getEnabled())
-      .required(field.getRequired())
-      .defaultValue(field.getDefaultValue())
+      .fieldKind(field.getFieldKind())
+      .fieldType(field.getFieldType())
+      .system(field.isSystem())
+      .locked(field.isLocked())
+      .searchable(field.isSearchable())
+      .active(field.isActive())
       .build();
   }
+
 
   private Specification<Ticket> buildSpecification(
     String search,
