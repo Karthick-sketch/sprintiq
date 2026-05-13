@@ -1,6 +1,7 @@
 package com.karthi.sprintiq.user.entity;
 
 import com.karthi.sprintiq.projects.entity.Project;
+import com.karthi.sprintiq.tickets.entity.Ticket;
 import com.karthi.sprintiq.tickets.entity.TicketComment;
 import com.karthi.sprintiq.user.enums.Role;
 import com.karthi.sprintiq.user.enums.UserStatus;
@@ -35,6 +36,9 @@ public class User {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private UserStatus status;
+
+  @OneToMany(mappedBy = "createdBy")
+  private List<Ticket> tickets;
 
   @OneToMany(mappedBy = "owner")
   private List<Project> projects;

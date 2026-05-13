@@ -1,4 +1,4 @@
-package com.karthi.sprintiq.user;
+package com.karthi.sprintiq.user.service;
 
 import com.karthi.sprintiq.exception.UserNotFoundException;
 import com.karthi.sprintiq.user.dto.UserDTO;

@@ -1,5 +1,6 @@
-package com.karthi.sprintiq.user;
+package com.karthi.sprintiq.user.controller;
 
+import com.karthi.sprintiq.user.service.UserService;
 import com.karthi.sprintiq.user.dto.UserDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

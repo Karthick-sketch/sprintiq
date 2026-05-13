@@ -1,4 +1,4 @@
-package com.karthi.sprintiq.fields;
+package com.karthi.sprintiq.fields.service;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.fields.dto.TicketFieldValueRequest;
@@ -9,7 +9,6 @@ import com.karthi.sprintiq.fields.entity.FieldOption;
 import com.karthi.sprintiq.fields.entity.ProjectField;
 import com.karthi.sprintiq.fields.entity.ProjectFieldOption;
 import com.karthi.sprintiq.fields.entity.TicketFieldValue;
-import com.karthi.sprintiq.fields.enums.WorkflowSemanticKey;
 import com.karthi.sprintiq.fields.repository.FieldOptionRepository;
 import com.karthi.sprintiq.fields.repository.ProjectFieldOptionRepository;
 import com.karthi.sprintiq.fields.repository.ProjectFieldRepository;

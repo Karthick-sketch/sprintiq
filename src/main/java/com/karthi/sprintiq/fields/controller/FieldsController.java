@@ -1,5 +1,6 @@
-package com.karthi.sprintiq.fields;
+package com.karthi.sprintiq.fields.controller;
 
+import com.karthi.sprintiq.fields.service.FieldsService;
 import com.karthi.sprintiq.fields.dto.FieldDTO;
 import com.karthi.sprintiq.fields.dto.FieldOptionDTO;
 import com.karthi.sprintiq.fields.enums.FieldKind;

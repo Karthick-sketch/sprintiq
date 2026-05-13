@@ -1,9 +1,9 @@
-package com.karthi.sprintiq.fields;
+package com.karthi.sprintiq.fields.service;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.fields.dto.FieldDTO;
 import com.karthi.sprintiq.fields.dto.FieldOptionDTO;
-import com.karthi.sprintiq.fields.entity.FieldDefinition;
+import com.karthi.sprintiq.fields.entity.Field;
 import com.karthi.sprintiq.fields.entity.FieldOption;
 import com.karthi.sprintiq.fields.enums.FieldKind;
 import com.karthi.sprintiq.fields.repository.FieldOptionRepository;
@@ -25,7 +25,7 @@ public class FieldsService {
     // ── Field Definition CRUD ────────────────────────────────────────────────
 
     public List<FieldDTO> getAllFields(FieldKind kind, Boolean active) {
-        List<FieldDefinition> fields;
+        List<Field> fields;
         if (kind != null && active != null && active) {
             fields = fieldRepository.findByFieldKindAndActiveTrue(kind);
         } else if (kind != null) {
@@ -43,7 +43,7 @@ public class FieldsService {
         if (request.getFieldKind() == FieldKind.STANDARD) {
             throw new IllegalArgumentException("Standard fields cannot be created via API. They are system-seeded.");
         }
-        FieldDefinition field = FieldDefinition.builder()
+        Field field = Field.builder()
             .name(request.getName())
             .description(request.getDescription())
             .fieldKind(FieldKind.CUSTOM)
@@ -58,7 +58,7 @@ public class FieldsService {
 
     @Transactional
     public FieldDTO updateField(Long id, FieldDTO request) {
-        FieldDefinition field = getFieldById(id);
+        Field field = getFieldById(id);
         if (field.isLocked()) {
             throw new IllegalStateException("Field '" + field.getName() + "' is locked and cannot be modified.");
         }
@@ -75,7 +75,7 @@ public class FieldsService {
     }
 
     public void deactivateField(Long id) {
-        FieldDefinition field = getFieldById(id);
+        Field field = getFieldById(id);
         if (field.isSystem()) {
             throw new IllegalStateException("System fields cannot be deactivated.");
         }
@@ -86,7 +86,7 @@ public class FieldsService {
     // ── Global Option Management ─────────────────────────────────────────────
 
     public FieldOptionDTO addOption(Long fieldId, FieldOptionDTO request) {
-        FieldDefinition field = getFieldById(fieldId);
+        Field field = getFieldById(fieldId);
         FieldOption option = FieldOption.builder()
             .field(field)
             .label(request.getLabel())
@@ -133,7 +133,7 @@ public class FieldsService {
 
     // ── Mapper Helpers ───────────────────────────────────────────────────────
 
-    public FieldDTO toDto(FieldDefinition field) {
+    public FieldDTO toDto(Field field) {
         List<FieldOptionDTO> options = field.getOptions() == null ? List.of() :
             field.getOptions().stream().map(this::toOptionDto).toList();
         return FieldDTO.builder()
@@ -166,7 +166,7 @@ public class FieldsService {
             .build();
     }
 
-    public FieldDefinition getFieldById(Long id) {
+    public Field getFieldById(Long id) {
         return fieldRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Field not found: " + id));
     }

@@ -1,5 +1,6 @@
-package com.karthi.sprintiq.projects;
+package com.karthi.sprintiq.projects.controller;
 
+import com.karthi.sprintiq.projects.service.ProjectsService;
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
 import com.karthi.sprintiq.projects.dto.SectionCreateDTO;
 import com.karthi.sprintiq.projects.dto.SectionDTO;

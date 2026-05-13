@@ -31,7 +31,7 @@ public class FieldOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id", nullable = false)
-    private FieldDefinition field;
+    private Field field;
 
     @Column(nullable = false, length = 120)
     private String label;

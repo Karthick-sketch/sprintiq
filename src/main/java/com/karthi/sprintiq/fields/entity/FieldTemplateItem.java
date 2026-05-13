@@ -26,7 +26,7 @@ public class FieldTemplateItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id", nullable = false)
-    private FieldDefinition field;
+    private Field field;
 
     @Column(name = "sort_order", nullable = false)
     @Builder.Default

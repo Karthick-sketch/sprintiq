@@ -1,17 +1,17 @@
-package com.karthi.sprintiq.fields;
+package com.karthi.sprintiq.fields.service;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.fields.dto.FieldOptionDTO;
 import com.karthi.sprintiq.fields.dto.ProjectFieldRequest;
 import com.karthi.sprintiq.fields.dto.ProjectFieldResponse;
-import com.karthi.sprintiq.fields.entity.FieldDefinition;
+import com.karthi.sprintiq.fields.entity.Field;
 import com.karthi.sprintiq.fields.entity.FieldOption;
 import com.karthi.sprintiq.fields.entity.ProjectField;
 import com.karthi.sprintiq.fields.entity.ProjectFieldOption;
 import com.karthi.sprintiq.fields.repository.FieldOptionRepository;
 import com.karthi.sprintiq.fields.repository.ProjectFieldOptionRepository;
 import com.karthi.sprintiq.fields.repository.ProjectFieldRepository;
-import com.karthi.sprintiq.projects.ProjectsService;
+import com.karthi.sprintiq.projects.service.ProjectsService;
 import com.karthi.sprintiq.projects.entity.Project;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class ProjectFieldService {
             throw new IllegalStateException("Field " + request.getFieldId() + " is already assigned to project " + projectId);
         }
         Project project = projectsService.getProjectById(projectId);
-        FieldDefinition field = fieldsService.getFieldById(request.getFieldId());
+        Field field = fieldsService.getFieldById(request.getFieldId());
 
         ProjectField pf = ProjectField.builder()
             .project(project)

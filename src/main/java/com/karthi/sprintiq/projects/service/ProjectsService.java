@@ -1,4 +1,4 @@
-package com.karthi.sprintiq.projects;
+package com.karthi.sprintiq.projects.service;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
@@ -13,7 +13,7 @@ import com.karthi.sprintiq.projects.repository.ProjectsRepository;
 import com.karthi.sprintiq.projects.repository.SectionRepository;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
-import com.karthi.sprintiq.user.UserService;
+import com.karthi.sprintiq.user.service.UserService;
 import com.karthi.sprintiq.user.entity.User;
 import java.util.Collections;
 import java.util.Comparator;

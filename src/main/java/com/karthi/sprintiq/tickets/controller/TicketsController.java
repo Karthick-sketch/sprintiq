@@ -1,7 +1,8 @@
-package com.karthi.sprintiq.tickets;
+package com.karthi.sprintiq.tickets.controller;
 
-import com.karthi.sprintiq.fields.TicketSearchService;
+import com.karthi.sprintiq.fields.service.TicketSearchService;
 import com.karthi.sprintiq.fields.dto.TicketSearchRequest;
+import com.karthi.sprintiq.tickets.service.TicketsService;
 import com.karthi.sprintiq.tickets.dto.TicketCreateRequestDTO;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;

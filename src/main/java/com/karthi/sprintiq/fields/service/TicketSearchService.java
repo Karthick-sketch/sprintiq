@@ -1,9 +1,8 @@
-package com.karthi.sprintiq.fields;
+package com.karthi.sprintiq.fields.service;
 
 import com.karthi.sprintiq.fields.dto.TicketSearchRequest;
 import com.karthi.sprintiq.fields.dto.TicketSearchRequest.FieldFilter;
 import com.karthi.sprintiq.fields.dto.TicketSearchRequest.FilterOperator;
-import com.karthi.sprintiq.fields.entity.FieldDefinition;
 import com.karthi.sprintiq.fields.enums.WorkflowSemanticKey;
 import com.karthi.sprintiq.fields.repository.FieldRepository;
 import com.karthi.sprintiq.tickets.dto.TicketListingDTO;

@@ -7,7 +7,7 @@ import lombok.*;
 
 /**
  * Project-level field configuration.
- * Decides whether a global FieldDefinition is active in a project,
+ * Decides whether a global Field is active in a project,
  * required, ordered, and whether options are inherited or overridden.
  */
 @Entity
@@ -38,9 +38,9 @@ public class ProjectField {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id", nullable = false)
-    private FieldDefinition field;
+    private Field field;
 
-    /** Optional per-project label override. Falls back to FieldDefinition.name. */
+    /** Optional per-project label override. Falls back to Field.name. */
     @Column(name = "display_name", length = 120)
     private String displayName;
 

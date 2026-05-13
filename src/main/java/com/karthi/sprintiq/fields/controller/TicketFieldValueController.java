@@ -1,5 +1,6 @@
-package com.karthi.sprintiq.fields;
+package com.karthi.sprintiq.fields.controller;
 
+import com.karthi.sprintiq.fields.service.TicketFieldValueService;
 import com.karthi.sprintiq.fields.dto.TicketFieldValueRequest;
 import com.karthi.sprintiq.fields.dto.TicketFieldValueResponse;
 import java.util.List;

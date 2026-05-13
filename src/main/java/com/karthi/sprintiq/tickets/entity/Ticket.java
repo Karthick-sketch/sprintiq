@@ -2,6 +2,7 @@ package com.karthi.sprintiq.tickets.entity;
 
 import com.karthi.sprintiq.projects.entity.Project;
 import com.karthi.sprintiq.projects.entity.Section;
+import com.karthi.sprintiq.user.entity.User;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,10 @@ public class Ticket {
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
   private List<TicketComment> comments;
+
+  @ManyToOne
+  @JoinColumn(name = "created_by")
+  private User createdBy;
 
   @ManyToOne
   @JoinColumn(name = "project_id", nullable = false)
