@@ -11,15 +11,15 @@ import lombok.*;
 @NoArgsConstructor
 public class FieldDTO {
 
-    private Long id;
-    private String systemKey;
-    private String name;
-    private String description;
-    private FieldKind fieldKind;
-    private FieldType fieldType;
-    private boolean system;
-    private boolean locked;
-    private boolean searchable;
-    private boolean active;
-    private List<FieldOptionDTO> options;
+  private Long id;
+  private String systemKey;
+  private String name;
+  private String description;
+  private FieldKind fieldKind;
+  private FieldType fieldType;
+  private boolean system;
+  private boolean locked;
+  private boolean searchable;
+  private boolean active;
+  private List<FieldOptionDTO> options;
 }

@@ -62,6 +62,10 @@ public class ProjectsService {
       .orElseThrow(() -> new EntityNotFoundException("Project not found"));
   }
 
+  public List<ProjectTitleDTO> getProjectList() {
+    return projectsRepository.findAllIdAndTitle();
+  }
+
   public ProjectDTO getProjectByIdToDTO(Long id) {
     return toProjectDTO(getProjectById(id));
   }
@@ -104,6 +108,13 @@ public class ProjectsService {
 
   private ProjectUser toProjectUser(Project project, User user) {
     return ProjectUser.builder().project(project).user(user).build();
+  }
+
+  public ProjectTitleDTO toProjectTitleDTO(Project project) {
+    return ProjectTitleDTO.builder()
+            .id(project.getId())
+            .title(project.getTitle())
+            .build();
   }
 
   // -------- Project Sections ------------------------------------------------
@@ -197,13 +208,6 @@ public class ProjectsService {
       .project(getProjectById(dto.getProject().getId()))
       .section(getSectionById(dto.getSectionId()))
       .orderIndex(dto.getOrderIndex())
-      .build();
-  }
-
-  public ProjectTitleDTO toProjectTitleDTO(Project project) {
-    return ProjectTitleDTO.builder()
-      .id(project.getId())
-      .title(project.getTitle())
       .build();
   }
 }

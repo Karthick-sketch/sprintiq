@@ -117,10 +117,8 @@ public class TicketsService {
     return TicketListingDTO.builder()
         .id(ticket.getId())
         .title(ticket.getTitle())
-        .project(
-            ticket.getSection() != null
-                ? projectsService.toProjectTitleDTO(ticket.getSection().getProject())
-                : null)
+        .fields(ticket.getFields().stream().map(this::toTicketFieldDTO).toList())
+        .projectId(ticket.getProject().getId())
         .build();
   }
 

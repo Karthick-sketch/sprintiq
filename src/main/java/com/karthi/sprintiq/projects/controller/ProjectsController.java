@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.projects.controller;
 
+import com.karthi.sprintiq.projects.dto.ProjectTitleDTO;
 import com.karthi.sprintiq.projects.service.ProjectsService;
 import com.karthi.sprintiq.projects.dto.ProjectDTO;
 import com.karthi.sprintiq.projects.dto.SectionCreateDTO;
@@ -36,6 +37,11 @@ public class ProjectsController {
   @GetMapping("/{id}")
   public ProjectDTO getProjectById(@PathVariable Long id) {
     return projectsService.getProjectByIdToDTO(id);
+  }
+
+  @GetMapping("/list")
+  public List<ProjectTitleDTO> getProjectList() {
+    return projectsService.getProjectList();
   }
 
   @PutMapping("/{id}")

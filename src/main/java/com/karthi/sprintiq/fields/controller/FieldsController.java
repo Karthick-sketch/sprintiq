@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.fields.controller;
 
+import com.karthi.sprintiq.fields.dto.FilterFieldOptionsDTO;
 import com.karthi.sprintiq.fields.service.FieldsService;
 import com.karthi.sprintiq.fields.dto.FieldDTO;
 import com.karthi.sprintiq.fields.dto.FieldOptionDTO;
@@ -14,57 +15,54 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FieldsController {
 
-    private final FieldsService fieldsService;
+  private final FieldsService fieldsService;
 
-    @GetMapping
-    public List<FieldDTO> getAllFields(
-        @RequestParam(required = false) FieldKind kind,
-        @RequestParam(required = false) Boolean active
-    ) {
-        return fieldsService.getAllFields(kind, active);
-    }
+  @GetMapping
+  public List<FieldDTO> getAllFields(
+      @RequestParam(required = false) FieldKind kind,
+      @RequestParam(required = false) Boolean active) {
+    return fieldsService.getAllFields(kind, active);
+  }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public FieldDTO createField(@RequestBody FieldDTO request) {
-        return fieldsService.createField(request);
-    }
+  @GetMapping("/filter")
+  public FilterFieldOptionsDTO getFilterFieldOptions() {
+    return fieldsService.findFilterFieldOptions();
+  }
 
-    @PatchMapping("/{fieldId}")
-    public FieldDTO updateField(@PathVariable Long fieldId, @RequestBody FieldDTO request) {
-        return fieldsService.updateField(fieldId, request);
-    }
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public FieldDTO createField(@RequestBody FieldDTO request) {
+    return fieldsService.createField(request);
+  }
 
-    @DeleteMapping("/{fieldId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivateField(@PathVariable Long fieldId) {
-        fieldsService.deactivateField(fieldId);
-    }
+  @PatchMapping("/{fieldId}")
+  public FieldDTO updateField(@PathVariable Long fieldId, @RequestBody FieldDTO request) {
+    return fieldsService.updateField(fieldId, request);
+  }
 
-    @PostMapping("/{fieldId}/options")
-    @ResponseStatus(HttpStatus.CREATED)
-    public FieldOptionDTO addOption(
-        @PathVariable Long fieldId,
-        @RequestBody FieldOptionDTO request
-    ) {
-        return fieldsService.addOption(fieldId, request);
-    }
+  @DeleteMapping("/{fieldId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deactivateField(@PathVariable Long fieldId) {
+    fieldsService.deactivateField(fieldId);
+  }
 
-    @PatchMapping("/{fieldId}/options/{optionId}")
-    public FieldOptionDTO updateOption(
-        @PathVariable Long fieldId,
-        @PathVariable Long optionId,
-        @RequestBody FieldOptionDTO request
-    ) {
-        return fieldsService.updateOption(fieldId, optionId, request);
-    }
+  @PostMapping("/{fieldId}/options")
+  @ResponseStatus(HttpStatus.CREATED)
+  public FieldOptionDTO addOption(@PathVariable Long fieldId, @RequestBody FieldOptionDTO request) {
+    return fieldsService.addOption(fieldId, request);
+  }
 
-    @PutMapping("/{fieldId}/options/reorder")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reorderOptions(
-        @PathVariable Long fieldId,
-        @RequestBody List<Long> orderedIds
-    ) {
-        fieldsService.reorderOptions(fieldId, orderedIds);
-    }
+  @PatchMapping("/{fieldId}/options/{optionId}")
+  public FieldOptionDTO updateOption(
+      @PathVariable Long fieldId,
+      @PathVariable Long optionId,
+      @RequestBody FieldOptionDTO request) {
+    return fieldsService.updateOption(fieldId, optionId, request);
+  }
+
+  @PutMapping("/{fieldId}/options/reorder")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void reorderOptions(@PathVariable Long fieldId, @RequestBody List<Long> orderedIds) {
+    fieldsService.reorderOptions(fieldId, orderedIds);
+  }
 }
