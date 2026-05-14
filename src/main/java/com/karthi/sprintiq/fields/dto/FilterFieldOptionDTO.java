@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilterFieldOptionDTO {
+
   private Long id;
-  private String value;
+  private String label;
 }
