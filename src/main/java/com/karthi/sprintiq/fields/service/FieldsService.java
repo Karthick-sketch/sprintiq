@@ -30,7 +30,11 @@ public class FieldsService {
     if (kind != null && active != null && active) {
       fields = fieldRepository.findByFieldKindAndActiveTrue(kind);
     } else if (kind != null) {
-      fields = fieldRepository.findAll().stream().filter(f -> f.getFieldKind() == kind).toList();
+      fields = fieldRepository
+        .findAll()
+        .stream()
+        .filter(f -> f.getFieldKind() == kind)
+        .toList();
     } else if (active != null && active) {
       fields = fieldRepository.findByActiveTrue();
     } else {
@@ -42,32 +46,34 @@ public class FieldsService {
   public FilterFieldOptionsDTO findFilterFieldOptions() {
     try {
       Long statusId = fieldRepository.findIdBySystemKey("status").orElseThrow();
-      Long priorityId = fieldRepository.findIdBySystemKey("priority").orElseThrow();
+      Long priorityId = fieldRepository
+        .findIdBySystemKey("priority")
+        .orElseThrow();
       return FilterFieldOptionsDTO.builder()
-          .status(fieldOptionRepository.findFieldOptionByFieldId(statusId))
-          .priority(fieldOptionRepository.findFieldOptionByFieldId(priorityId))
-          .build();
+        .status(fieldOptionRepository.findFieldOptionByFieldId(statusId))
+        .priority(fieldOptionRepository.findFieldOptionByFieldId(priorityId))
+        .build();
     } catch (Exception e) {
-      throw new EntityNotFoundException(e.getMessage());
+      throw new EntityNotFoundException("Fields not found: " + e.getMessage());
     }
   }
 
   public FieldDTO createField(FieldDTO request) {
     if (request.getFieldKind() == FieldKind.STANDARD) {
       throw new IllegalArgumentException(
-          "Standard fields cannot be created via API. They are system-seeded.");
+        "Standard fields cannot be created via API. They are system-seeded."
+      );
     }
-    Field field =
-        Field.builder()
-            .name(request.getName())
-            .description(request.getDescription())
-            .fieldKind(FieldKind.CUSTOM)
-            .fieldType(request.getFieldType())
-            .system(false)
-            .locked(false)
-            .searchable(request.isSearchable())
-            .active(true)
-            .build();
+    Field field = Field.builder()
+      .name(request.getName())
+      .description(request.getDescription())
+      .fieldKind(FieldKind.CUSTOM)
+      .fieldType(request.getFieldType())
+      .system(false)
+      .locked(false)
+      .searchable(request.isSearchable())
+      .active(true)
+      .build();
     return toDto(fieldRepository.save(field));
   }
 
@@ -76,12 +82,17 @@ public class FieldsService {
     Field field = getFieldById(id);
     if (field.isLocked()) {
       throw new IllegalStateException(
-          "Field '" + field.getName() + "' is locked and cannot be modified.");
+        "Field '" + field.getName() + "' is locked and cannot be modified."
+      );
     }
     // Block field type change if values exist
-    if (field.getFieldType() != request.getFieldType()
-        && ticketFieldValueRepository.existsByProjectFieldId(id)) {
-      throw new IllegalStateException("Cannot change field type when ticket values already exist.");
+    if (
+      field.getFieldType() != request.getFieldType() &&
+      ticketFieldValueRepository.existsByProjectFieldId(id)
+    ) {
+      throw new IllegalStateException(
+        "Cannot change field type when ticket values already exist."
+      );
     }
     field.setName(request.getName());
     field.setDescription(request.getDescription());
@@ -103,29 +114,35 @@ public class FieldsService {
 
   public FieldOptionDTO addOption(Long fieldId, FieldOptionDTO request) {
     Field field = getFieldById(fieldId);
-    FieldOption option =
-        FieldOption.builder()
-            .field(field)
-            .label(request.getLabel())
-            .valueKey(request.getValueKey())
-            .color(request.getColor())
-            .icon(request.getIcon())
-            .sortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0)
-            .workflowSemanticKey(request.getWorkflowSemanticKey())
-            .defaultOption(request.isDefaultOption())
-            .active(true)
-            .build();
+    FieldOption option = FieldOption.builder()
+      .field(field)
+      .label(request.getLabel())
+      .valueKey(request.getValueKey())
+      .color(request.getColor())
+      .icon(request.getIcon())
+      .sortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0)
+      .workflowSemanticKey(request.getWorkflowSemanticKey())
+      .defaultOption(request.isDefaultOption())
+      .active(true)
+      .build();
     return toOptionDto(fieldOptionRepository.save(option));
   }
 
   @Transactional
-  public FieldOptionDTO updateOption(Long fieldId, Long optionId, FieldOptionDTO request) {
-    FieldOption option =
-        fieldOptionRepository
-            .findById(optionId)
-            .orElseThrow(() -> new EntityNotFoundException("Field option not found: " + optionId));
+  public FieldOptionDTO updateOption(
+    Long fieldId,
+    Long optionId,
+    FieldOptionDTO request
+  ) {
+    FieldOption option = fieldOptionRepository
+      .findById(optionId)
+      .orElseThrow(() ->
+        new EntityNotFoundException("Field option not found: " + optionId)
+      );
     if (!option.getField().getId().equals(fieldId)) {
-      throw new IllegalArgumentException("Option does not belong to field " + fieldId);
+      throw new IllegalArgumentException(
+        "Option does not belong to field " + fieldId
+      );
     }
     option.setLabel(request.getLabel());
     option.setColor(request.getColor());
@@ -138,14 +155,16 @@ public class FieldsService {
 
   @Transactional
   public void reorderOptions(Long fieldId, List<Long> orderedIds) {
-    List<FieldOption> options = fieldOptionRepository.findByFieldIdOrderBySortOrderAsc(fieldId);
+    List<FieldOption> options =
+      fieldOptionRepository.findByFieldIdOrderBySortOrderAsc(fieldId);
     for (int i = 0; i < orderedIds.size(); i++) {
       Long oid = orderedIds.get(i);
       int idx = i;
-      options.stream()
-          .filter(o -> o.getId().equals(oid))
-          .findFirst()
-          .ifPresent(o -> o.setSortOrder(idx));
+      options
+        .stream()
+        .filter(o -> o.getId().equals(oid))
+        .findFirst()
+        .ifPresent(o -> o.setSortOrder(idx));
     }
     fieldOptionRepository.saveAll(options);
   }
@@ -154,42 +173,42 @@ public class FieldsService {
 
   public FieldDTO toDto(Field field) {
     List<FieldOptionDTO> options =
-        field.getOptions() == null
-            ? List.of()
-            : field.getOptions().stream().map(this::toOptionDto).toList();
+      field.getOptions() == null
+        ? List.of()
+        : field.getOptions().stream().map(this::toOptionDto).toList();
     return FieldDTO.builder()
-        .id(field.getId())
-        .systemKey(field.getSystemKey())
-        .name(field.getName())
-        .description(field.getDescription())
-        .fieldKind(field.getFieldKind())
-        .fieldType(field.getFieldType())
-        .system(field.isSystem())
-        .locked(field.isLocked())
-        .searchable(field.isSearchable())
-        .active(field.isActive())
-        .options(options)
-        .build();
+      .id(field.getId())
+      .systemKey(field.getSystemKey())
+      .name(field.getName())
+      .description(field.getDescription())
+      .fieldKind(field.getFieldKind())
+      .fieldType(field.getFieldType())
+      .system(field.isSystem())
+      .locked(field.isLocked())
+      .searchable(field.isSearchable())
+      .active(field.isActive())
+      .options(options)
+      .build();
   }
 
   public FieldOptionDTO toOptionDto(FieldOption option) {
     return FieldOptionDTO.builder()
-        .id(option.getId())
-        .fieldId(option.getField() != null ? option.getField().getId() : null)
-        .label(option.getLabel())
-        .valueKey(option.getValueKey())
-        .color(option.getColor())
-        .icon(option.getIcon())
-        .sortOrder(option.getSortOrder())
-        .workflowSemanticKey(option.getWorkflowSemanticKey())
-        .defaultOption(option.isDefaultOption())
-        .active(option.isActive())
-        .build();
+      .id(option.getId())
+      .fieldId(option.getField() != null ? option.getField().getId() : null)
+      .label(option.getLabel())
+      .valueKey(option.getValueKey())
+      .color(option.getColor())
+      .icon(option.getIcon())
+      .sortOrder(option.getSortOrder())
+      .workflowSemanticKey(option.getWorkflowSemanticKey())
+      .defaultOption(option.isDefaultOption())
+      .active(option.isActive())
+      .build();
   }
 
   public Field getFieldById(Long id) {
     return fieldRepository
-        .findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Field not found: " + id));
+      .findById(id)
+      .orElseThrow(() -> new EntityNotFoundException("Field not found: " + id));
   }
 }

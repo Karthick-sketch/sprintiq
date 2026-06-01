@@ -17,8 +17,7 @@ public interface FieldOptionRepository
   List<FieldOption> findByFieldIdAndActiveTrue(Long fieldId);
 
   @Query(
-    value = "SELECT new com.karthi.sprintiq.fields.dto.FilterFieldOptionDTO(f.id, f.label) FROM field_options f WHERE f.field_id = :fieldId",
-    nativeQuery = true
+    "SELECT new com.karthi.sprintiq.fields.dto.FilterFieldOptionDTO(f.id, f.label) FROM FieldOption f WHERE f.field.id = :fieldId"
   )
   List<FilterFieldOptionDTO> findFieldOptionByFieldId(
     @Param("fieldId") Long fieldId
