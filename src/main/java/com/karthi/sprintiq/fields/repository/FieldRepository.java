@@ -10,12 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FieldRepository extends JpaRepository<Field, Long> {
-
   Optional<Field> findBySystemKey(String systemKey);
 
-  List<Field> findByFieldKindAndActiveTrue(FieldKind fieldKind);
+  List<Field> findByFieldKindAndActiveTrueOrderById(FieldKind fieldKind);
 
-  List<Field> findByActiveTrue();
+  List<Field> findByActiveTrueOrderById();
 
   boolean existsBySystemKey(String systemKey);
 

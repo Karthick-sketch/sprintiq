@@ -95,6 +95,8 @@ CREATE TABLE fields
     field_kind    VARCHAR(20)  NOT NULL DEFAULT 'CUSTOM',
     field_type    VARCHAR(30)  NOT NULL DEFAULT 'TEXT',
     is_system     BOOLEAN      NOT NULL DEFAULT FALSE,
+    is_enabled    BOOLEAN      NOT NULL DEFAULT FALSE,
+    is_required   BOOLEAN      NOT NULL DEFAULT FALSE,
     is_locked     BOOLEAN      NOT NULL DEFAULT FALSE,
     is_searchable BOOLEAN      NOT NULL DEFAULT TRUE,
     is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
@@ -352,3 +354,12 @@ FROM field_templates t
          JOIN fields f ON f.system_key IN
                           ('status', 'priority', 'assignee', 'reporter', 'due_date', 'story_points', 'github_url')
 WHERE t.template_key = 'default';
+
+-- ========================================================
+-- Seed: Standard Fields - set is_enabled and is_required
+-- ========================================================
+UPDATE fields
+SET is_enabled = fti.is_enabled, is_required = fti.is_required
+FROM fields f
+INNER JOIN field_template_items fti
+ON f.id = fti.field_id;

@@ -18,6 +18,8 @@ public class FieldDTO {
   private FieldKind fieldKind;
   private FieldType fieldType;
   private boolean system;
+  private boolean enabled;
+  private boolean required;
   private boolean locked;
   private boolean searchable;
   private boolean active;

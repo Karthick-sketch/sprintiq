@@ -77,12 +77,12 @@ VALUES ('Project Alpha',
         1);
 
 -- Project Users
-INSERT INTO project_users (project_id, user_id)
-VALUES (1, 1),
-       (1, 2),
-       (2, 2),
-       (2, 3),
-       (3, 4);
+-- INSERT INTO project_users (project_id, user_id)
+-- VALUES (1, 1),
+--        (1, 2),
+--        (2, 2),
+--        (2, 3),
+--        (3, 4);
 
 -- Sections
 INSERT INTO sections (title,

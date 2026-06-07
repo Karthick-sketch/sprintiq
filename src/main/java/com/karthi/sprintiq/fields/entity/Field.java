@@ -51,6 +51,12 @@ public class Field {
   @Column(name = "is_system", nullable = false)
   private boolean system;
 
+  @Column(name = "is_enabled", nullable = false)
+  private boolean enabled;
+
+  @Column(name = "is_required", nullable = false)
+  private boolean required;
+
   /** True prevents type changes and other destructive edits. */
   @Column(name = "is_locked", nullable = false)
   private boolean locked;
