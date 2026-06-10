@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.fields.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.karthi.sprintiq.fields.enums.WorkflowSemanticKey;
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -31,6 +32,7 @@ public class FieldOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id", nullable = false)
+    @JsonBackReference
     private Field field;
 
     @Column(nullable = false, length = 120)

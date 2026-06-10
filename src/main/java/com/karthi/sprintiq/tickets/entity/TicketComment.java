@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.tickets.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.karthi.sprintiq.user.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class TicketComment {
 
   @ManyToOne
   @JoinColumn(name = "ticket_id", nullable = false)
+  @JsonBackReference
   private Ticket ticket;
 
   @ManyToOne

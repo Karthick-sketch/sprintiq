@@ -1,11 +1,7 @@
 package com.karthi.sprintiq.projects.service;
 
 import com.karthi.sprintiq.exception.EntityNotFoundException;
-import com.karthi.sprintiq.projects.dto.ProjectDTO;
-import com.karthi.sprintiq.projects.dto.ProjectSectionTicketDTO;
-import com.karthi.sprintiq.projects.dto.ProjectTitleDTO;
-import com.karthi.sprintiq.projects.dto.SectionCreateDTO;
-import com.karthi.sprintiq.projects.dto.SectionDTO;
+import com.karthi.sprintiq.projects.dto.*;
 import com.karthi.sprintiq.projects.entity.Project;
 import com.karthi.sprintiq.projects.entity.ProjectUser;
 import com.karthi.sprintiq.projects.entity.Section;
@@ -13,12 +9,12 @@ import com.karthi.sprintiq.projects.repository.ProjectsRepository;
 import com.karthi.sprintiq.projects.repository.SectionRepository;
 import com.karthi.sprintiq.tickets.dto.TicketDTO;
 import com.karthi.sprintiq.tickets.entity.Ticket;
+import com.karthi.sprintiq.tickets.entity.TicketField;
 import com.karthi.sprintiq.user.service.UserService;
 import com.karthi.sprintiq.user.entity.User;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,27 +35,20 @@ public class ProjectsService {
     project.setDescription(request.getDescription());
     project.setOwner(userService.getUserById(request.getOwnerId()));
     project.setTeamMembers(
-      request
-        .getTeamMemberIds()
-        .stream()
-        .map(userId -> toProjectUser(project, userService.getUserById(userId)))
-        .toList()
-    );
+        request.getTeamMemberIds().stream()
+            .map(userId -> toProjectUser(project, userService.getUserById(userId)))
+            .toList());
     return toProjectDTO(projectsRepository.save(project));
   }
 
   public List<ProjectDTO> getAllProjects() {
-    return projectsRepository
-      .findAll()
-      .stream()
-      .map(this::toProjectDTO)
-      .toList();
+    return projectsRepository.findAll().stream().map(this::toProjectDTO).toList();
   }
 
   public Project getProjectById(Long id) {
     return projectsRepository
-      .findById(id)
-      .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Project not found"));
   }
 
   public List<ProjectTitleDTO> getProjectList() {
@@ -76,12 +65,9 @@ public class ProjectsService {
     project.setDescription(request.getDescription());
     project.setOwner(userService.getUserById(request.getOwnerId()));
     project.setTeamMembers(
-      request
-        .getTeamMemberIds()
-        .stream()
-        .map(userId -> toProjectUser(project, userService.getUserById(userId)))
-        .toList()
-    );
+        request.getTeamMemberIds().stream()
+            .map(userId -> toProjectUser(project, userService.getUserById(userId)))
+            .toList());
     projectsRepository.save(project);
   }
 
@@ -92,18 +78,15 @@ public class ProjectsService {
 
   private ProjectDTO toProjectDTO(Project project) {
     return ProjectDTO.builder()
-      .id(project.getId())
-      .title(project.getTitle())
-      .description(project.getDescription())
-      .ownerId(project.getOwner().getId())
-      .teamMemberIds(
-        project
-          .getTeamMembers()
-          .stream()
-          .map(projectUser -> projectUser.getUser().getId())
-          .toList()
-      )
-      .build();
+        .id(project.getId())
+        .title(project.getTitle())
+        .description(project.getDescription())
+        .ownerId(project.getOwner().getId())
+        .teamMemberIds(
+            project.getTeamMembers().stream()
+                .map(projectUser -> projectUser.getUser().getId())
+                .toList())
+        .build();
   }
 
   private ProjectUser toProjectUser(Project project, User user) {
@@ -111,17 +94,11 @@ public class ProjectsService {
   }
 
   public ProjectTitleDTO toProjectTitleDTO(Project project) {
-    return ProjectTitleDTO.builder()
-            .id(project.getId())
-            .title(project.getTitle())
-            .build();
+    return ProjectTitleDTO.builder().id(project.getId()).title(project.getTitle()).build();
   }
 
   // -------- Project Sections ------------------------------------------------
-  public SectionDTO createSection(
-    Long projectId,
-    SectionCreateDTO sectionCreateDTO
-  ) {
+  public SectionDTO createSection(Long projectId, SectionCreateDTO sectionCreateDTO) {
     Section section = new Section();
     section.setTitle(sectionCreateDTO.getTitle());
     section.setProject(getProjectById(projectId));
@@ -131,12 +108,9 @@ public class ProjectsService {
 
   public List<SectionDTO> getSections(long projectId) {
     try {
-      return sectionRepository
-        .findByProjectId(projectId)
-        .stream()
-        .sorted(Comparator.comparing(Section::getOrderIndex))
-        .map(this::toSectionDTO)
-        .toList();
+      return sectionRepository.findByProjectIdOrderByOrderIndex(projectId).stream()
+          .map(this::toSectionDTO)
+          .toList();
     } catch (Exception e) {
       log.error("Error fetching sections for project {}", projectId, e);
       return Collections.emptyList();
@@ -148,14 +122,12 @@ public class ProjectsService {
       return null;
     }
     return sectionRepository
-      .findById(sectionId)
-      .orElseThrow(() ->
-        new EntityNotFoundException("Project section not found")
-      );
+        .findById(sectionId)
+        .orElseThrow(() -> new EntityNotFoundException("Project section not found"));
   }
 
   public List<Section> getSectionsByProjectId(Long projectId) {
-    return sectionRepository.findByProjectId(projectId);
+    return sectionRepository.findByProjectIdOrderByOrderIndex(projectId);
   }
 
   public TicketDTO addTicketToSection(Long sectionId, TicketDTO dto) {
@@ -170,44 +142,49 @@ public class ProjectsService {
 
   private SectionDTO toSectionDTO(Section section) {
     return SectionDTO.builder()
-      .id(section.getId())
-      .title(section.getTitle())
-      .projectId(section.getProject().getId())
-      .tickets(
-        Optional.ofNullable(section.getTickets())
-          .map(tickets ->
-            tickets
-              .stream()
-              .sorted(Comparator.comparing(Ticket::getOrderIndex))
-              .map(this::toProjectSectionTicketDTO)
-              .toList()
-          )
-          .orElse(Collections.emptyList())
-      )
-      .orderIndex(section.getOrderIndex())
-      .build();
+        .id(section.getId())
+        .title(section.getTitle())
+        .projectId(section.getProject().getId())
+        .tickets(
+            Optional.ofNullable(section.getTickets())
+                .map(
+                    tickets ->
+                        tickets.stream()
+                            .sorted(Comparator.comparing(Ticket::getOrderIndex))
+                            .map(this::toProjectSectionTicketDTO)
+                            .toList())
+                .orElse(Collections.emptyList()))
+        .orderIndex(section.getOrderIndex())
+        .build();
   }
 
   private ProjectSectionTicketDTO toProjectSectionTicketDTO(Ticket ticket) {
     return ProjectSectionTicketDTO.builder()
-      .id(ticket.getId())
-      .title(ticket.getTitle())
-      .projectId(ticket.getProject().getId())
-      .sectionId(
-        ticket.getSection() != null ? ticket.getSection().getId() : null
-      )
-      .orderIndex(ticket.getOrderIndex())
-      .build();
+        .id(ticket.getId())
+        .title(ticket.getTitle())
+        .fields(getSectionTicketFields(ticket.getTicketFields()))
+        .projectId(ticket.getProject().getId())
+        .sectionId(ticket.getSection() != null ? ticket.getSection().getId() : null)
+        .orderIndex(ticket.getOrderIndex())
+        .build();
+  }
+
+  private List<SectionTicketFieldDTO> getSectionTicketFields(List<TicketField> ticketFields) {
+    final List<String> requiredFields = List.of("status", "priority", "assignee", "due_date");
+    return ticketFields.stream()
+        .filter(tf -> requiredFields.contains(tf.getField().getSystemKey()))
+        .map(tf -> new SectionTicketFieldDTO(tf.getField().getSystemKey(), tf.getValue()))
+        .toList();
   }
 
   private Ticket toTicket(TicketDTO dto) {
     return Ticket.builder()
-      .id(dto.getId())
-      .title(dto.getTitle())
-      .description(dto.getDescription())
-      .project(getProjectById(dto.getProject().getId()))
-      .section(getSectionById(dto.getSectionId()))
-      .orderIndex(dto.getOrderIndex())
-      .build();
+        .id(dto.getId())
+        .title(dto.getTitle())
+        .description(dto.getDescription())
+        .project(getProjectById(dto.getProject().getId()))
+        .section(getSectionById(dto.getSectionId()))
+        .orderIndex(dto.getOrderIndex())
+        .build();
   }
 }

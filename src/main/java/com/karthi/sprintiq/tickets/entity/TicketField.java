@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.tickets.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.karthi.sprintiq.fields.entity.Field;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,6 +19,7 @@ public class TicketField {
 
   @ManyToOne
   @JoinColumn(name = "ticket_id", nullable = false)
+  @JsonBackReference
   private Ticket ticket;
 
   @ManyToOne

@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.fields.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.karthi.sprintiq.fields.enums.FieldKind;
 import com.karthi.sprintiq.fields.enums.FieldType;
 import jakarta.persistence.*;
@@ -78,9 +79,11 @@ public class Field {
   /** Global default options — do NOT eagerly fetch; use repository queries per field. */
   @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("sortOrder ASC")
+  @JsonManagedReference
   private List<FieldOption> options;
 
   @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonManagedReference
   private List<FieldTemplateItem> templateItems;
 
   @PrePersist

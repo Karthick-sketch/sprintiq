@@ -101,7 +101,7 @@ public class TicketsService {
         .title(ticket.getTitle())
         .description(ticket.getDescription())
         .comments(toCommentDTO(ticket.getComments()))
-        .ticketFields(toTicketFieldsDTO(ticket.getFields()))
+        .ticketFields(toTicketFieldsDTO(ticket.getTicketFields()))
         .project(projectsService.toProjectTitleDTO(ticket.getProject()))
         .sectionId(ticket.getSection() != null ? ticket.getSection().getId() : null)
         .parentId(ticket.getParent() != null ? ticket.getParent().getId() : null)
@@ -117,7 +117,7 @@ public class TicketsService {
     return TicketListingDTO.builder()
         .id(ticket.getId())
         .title(ticket.getTitle())
-        .fields(ticket.getFields().stream().map(this::toTicketFieldDTO).toList())
+        .fields(ticket.getTicketFields().stream().map(this::toTicketFieldDTO).toList())
         .projectId(ticket.getProject().getId())
         .build();
   }

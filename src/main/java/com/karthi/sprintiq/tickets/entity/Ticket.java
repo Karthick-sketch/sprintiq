@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.tickets.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.karthi.sprintiq.projects.entity.Project;
 import com.karthi.sprintiq.projects.entity.Section;
 import com.karthi.sprintiq.user.entity.User;
@@ -28,6 +29,7 @@ public class Ticket {
   private String description;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+  @JsonManagedReference
   private List<TicketComment> comments;
 
   @ManyToOne
@@ -46,7 +48,8 @@ public class Ticket {
   private Integer orderIndex;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-  private List<TicketField> fields;
+  @JsonManagedReference
+  private List<TicketField> ticketFields;
 
   @ManyToOne
   @JoinColumn(name = "parent_id")

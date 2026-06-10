@@ -1,5 +1,6 @@
 package com.karthi.sprintiq.fields.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
@@ -26,6 +27,7 @@ public class FieldTemplateItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id", nullable = false)
+    @JsonBackReference
     private Field field;
 
     @Column(name = "sort_order", nullable = false)
